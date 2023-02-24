@@ -1,24 +1,20 @@
 <template>
-  <el-tabs
-    v-show="mainStore.shortcutList.length > 0"
-    v-model="mainStore.shortcutActive"
-    type="border-card"
-    closable
-    @tab-click="handleTabClick"
-    @tab-remove="removeTab"
-  >
-    <el-tab-pane
-      v-for="item in mainStore.shortcutList"
-      :key="item.path"
-      :label="(item.meta?.title as string)"
-      :name="item.path"
+  <div class="tabs-wrap" v-if="mainStore.shortcutList.length !== 0">
+    <el-tag
+      v-for="tag in mainStore.shortcutList"
+      closable
+      :key="tag.fullPath"
+      :type="mainStore.shortcutActive === tag.path ? '' : 'info'"
+      size="large"
+      @click="handleTabClick(tag.path)"
+      @close="handleCLoseTabClick(tag.path)"
     >
-    </el-tab-pane>
-  </el-tabs>
+      {{ tag.meta.title }}
+    </el-tag>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { TabsPaneContext, TabPaneName } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import { useAppStore } from "@/store";
 
@@ -26,34 +22,33 @@ const router = useRouter();
 const route = useRoute();
 const mainStore = useAppStore();
 
-const handleTabClick = (v: TabsPaneContext, e: Event) => {
-  route.path !== v.paneName && router.push({ path: v.paneName as string });
+const handleTabClick = (path: string) => {
+  route.path !== path && router.push({ path });
 };
 
-const removeTab = (targetName: TabPaneName) => {
-  mainStore.removeShortcutItem(targetName as string);
+const handleCLoseTabClick = (path: string) => {
+  mainStore.removeShortcutItem(path);
 };
 </script>
 
 <style lang="scss" scoped>
-.el-tabs {
-  background-color: #f2f2f2;
+.tabs-wrap {
+  padding: 12px;
+  overflow-x: scroll;
+  display: flex;
+  scrollbar-width: 0;
+  border-bottom: solid 1px rgba($color: #000000, $alpha: 0.1);
 }
 
-:deep(.el-tabs--border-card) {
-  background-color: #f2f2f2;
-  background: #f2f2f2;
-  border: none;
+.tabs-wrap::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 
-:deep(.el-tabs__header) {
-  background-color: #f2f2f2;
-  border-top: none;
-  border-bottom: none;
+.el-tag {
+  margin-left: 20px;
+  cursor: pointer;
 }
-
-:deep(.el-tabs__content) {
-  height: 0 !important;
-  padding: 0;
+.el-tag:first-child {
+  margin-left: 10px;
 }
 </style>

@@ -34,9 +34,9 @@ export const dynamicRoutes: Array<AppRouteRecord> = [
     },
     children: [
       {
-        path: "/system/user",
+        path: "/user-manage",
         name: "UserManage",
-        component: () => import("@/pages/user/index.vue"),
+        component: () => import("@/pages/user-manage/index.vue"),
         meta: {
           title: "用户管理",
         },
@@ -131,8 +131,6 @@ router.beforeEach(
         next({ path: "/login", query: { callback: to.fullPath } });
       } else {
         if (useUserStore().routes.length <= 0) {
-          console.log("不断触发");
-          
           /**
            * 根据不同账号,动态注册不同的路由
            */

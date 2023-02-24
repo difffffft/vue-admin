@@ -54,5 +54,17 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         },
       },
     },
+
+    /**
+     * 全局变量
+     */
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@import "@/styles/var.module.scss";',
+          javascriptEnabled: true,
+        },
+      },
+    },
   };
 });

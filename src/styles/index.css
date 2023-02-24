@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
+}
+
+.table-crud {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-filter {
+  background-color: #ffffff;
+  border-radius: $app--radius;
+  padding: 30px;
+  //   padding-top: 12px;
+}
+
+.table-result {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  padding: 12px;
+  flex: 1;
+  background-color: #fff;
+}
+
+.el-table {
+  flex: 1;
+}
+
+.table-options {
+  display: flex;
+  justify-content: flex-end;
+}
+.el-table,
+.table-pagination-block {
+  margin-top: var(--el-main-padding);
+}
+
+.table-pagination-block {
+  display: flex;
+  justify-content: flex-end;
+}
