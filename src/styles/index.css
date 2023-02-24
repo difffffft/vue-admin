@@ -20,9 +20,8 @@ body,
 
 .table-filter {
   background-color: #ffffff;
-  border-radius: $app--radius;
+  /* border-radius: $app--radius; */
   padding: 30px;
-  //   padding-top: 12px;
 }
 
 .table-result {
