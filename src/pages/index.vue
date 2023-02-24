@@ -1,0 +1,67 @@
+<template>
+    <el-container>
+        <el-aside>
+            <app-aside />
+        </el-aside>
+        <el-container>
+            <el-header>
+                <app-header @click="handleShowAside"></app-header>
+            </el-header>
+            <app-tabs />
+            <el-main>
+                <router-view v-slot="{ Component }">
+                    <keep-alive :include="state.includeList">
+                        <component :is="Component" />
+                    </keep-alive>
+                </router-view>
+            </el-main>
+            <!-- <el-footer></el-footer> -->
+        </el-container>
+    </el-container>
+</template>
+
+<script lang="ts" setup>
+import AppAside from '@/components/app-aside/app-aside.vue'
+import AppHeader from '@/components/app-header/app-header.vue'
+import AppTabs from '@/components/app-tabs/app-tabs.vue'
+import { useAppStore } from '@/store'
+import { reactive, watch } from 'vue';
+import { useRoute } from 'vue-router';
+const mainStore = useAppStore()
+
+const handleShowAside = () => {
+    mainStore.$patch({ asideCollapse: !mainStore.asideCollapse })
+}
+
+const state = reactive({
+    includeList: new Array()
+})
+const route = useRoute()
+watch(() => route, (newVal, oldVal) => {
+    if (newVal.meta.keepAlive && state.includeList.indexOf(newVal.name) === -1) {
+        state.includeList.push(newVal.name);
+    }
+}, { deep: true })
+</script>
+  
+<style lang="scss" scoped>
+.el-container {
+    height: 100%;
+
+    .el-aside {
+        width: auto;
+
+        ul {
+            height: 100%;
+        }
+    }
+}
+
+.el-menu {
+    border-right: none;
+}
+
+.el-header {
+    background: #f2f2f2;
+}
+</style>
