@@ -6,7 +6,7 @@
     ></div>
     <div class="content">
       <div class="content__wrapper">
-        <h3>欢迎<span>登陆</span></h3>
+        <h3>欢迎<span>登录</span></h3>
         <div class="from">
           <div class="form-item">
             <div class="desc">
