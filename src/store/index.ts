@@ -121,7 +121,7 @@ export const useUserStore = defineStore("user", {
 
       //重新加载动态路由
       this.$reset();
-
+      //清除用户信息
       useAppStore().$reset();
 
       //回到登录页面

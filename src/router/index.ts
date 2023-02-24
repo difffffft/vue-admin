@@ -76,7 +76,7 @@ export const dynamicRoutes: Array<AppRouteRecord> = [
     meta: {
       title: "编辑模板",
       icon: "HomeFilled",
-      hidden:true
+      hidden: true,
     },
   },
 ];
@@ -101,15 +101,7 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   // {
-  //   path: "/404",
-  //   name: "NotFound",
-  //   component: () => import("@/pages/error/404.vue"),
-  //   meta: {
-  //     title: "页面不存在",
-  //   },
-  // },
-  // {
-  //   path: "/:catchAll(.*)",
+  //   path: "/:matchAll(.*)",
   //   name: "NotFound",
   //   component: () => import("@/pages/error/404.vue"),
   //   meta: {
@@ -132,13 +124,15 @@ router.beforeEach(
     const token = Cookie.get("token");
     NProgress.start();
 
-    if (to.path === "/login" || to.path === "/404") {
+    if (to.path === "/login") {
       next();
     } else {
       if (!token) {
         next({ path: "/login", query: { callback: to.fullPath } });
       } else {
         if (useUserStore().routes.length <= 0) {
+          console.log("不断触发");
+          
           /**
            * 根据不同账号,动态注册不同的路由
            */

@@ -7,7 +7,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
   const env = loadEnv(mode, process.cwd());
   const { VITE_APP_ENV, VITE_APP_BASE_API } = env;
   return {
-    base: VITE_APP_ENV === "production" ? "/" : "/",
+    base: VITE_APP_ENV === "production" ? "./" : "/",
     plugins: [
       vue(),
       requireTransform({
