@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import requireTransform from "vite-plugin-require-transform";
 import vue from "@vitejs/plugin-vue";
 import path from "path";
+import VueSetupExtend from "vite-plugin-vue-setup-extend";
 
 export default defineConfig(({ command, mode, ssrBuild }) => {
   const env = loadEnv(mode, process.cwd());
@@ -10,9 +11,18 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
     base: VITE_APP_ENV === "production" ? "./" : "/",
     plugins: [
       vue(),
+
+      /**
+       * 在vite项目可以使用require函数
+       */
       requireTransform({
         fileRegex: /.js$|.ts$|.vue$/,
       }),
+
+      /**
+       * 可以在script声明组件的name
+       */
+      VueSetupExtend(),
     ],
     resolve: {
       /**

@@ -6,9 +6,9 @@ export const superAdminRoutesData: AppResult = {
   msg: "一切OK",
   data: [
     "/home",
-    "/user-manage",
-    "/system/role",
-    "/system/route",
+    "/system/user-manage",
+    "/system/role-manage",
+    "/system/route-manage",
     "/temp-manage",
     "/use-temp",
   ],
@@ -20,5 +20,5 @@ export const superAdminRoutesData: AppResult = {
 export const defaultAdminRoutesData: AppResult = {
   code: 200,
   msg: "一切OK",
-  data: ["/home","/temp-manage"],
+  data: ["/home", "/temp-manage", "/use-temp"],
 };

@@ -44,16 +44,29 @@
             @click="handleLogin"
             >{{ state.loadingText }}</el-button
           >
-          <el-button class="login-forget-btn">忘记密码?</el-button>
+          <el-button class="login-forget-btn" @click="handleForgetClick"
+            >忘记密码?</el-button
+          >
         </div>
       </div>
     </div>
   </div>
+
+  <el-dialog v-model="dialogVisible" title="忘记密码?" width="30%">
+    <span>请联系管理员处理!</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">
+          确定
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import Cookie from "js-cookie";
-import { reactive } from "vue";
+import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import { reqLogin } from "@/api";
@@ -89,6 +102,11 @@ const handleLogin = async () => {
     state.loading = false;
     state.loadingText = "登录";
   }
+};
+
+const dialogVisible = ref(false);
+const handleForgetClick = () => {
+  dialogVisible.value = true;
 };
 </script>
 

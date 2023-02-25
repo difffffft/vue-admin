@@ -34,7 +34,7 @@ export const dynamicRoutes: Array<AppRouteRecord> = [
     },
     children: [
       {
-        path: "/user-manage",
+        path: "/system/user-manage",
         name: "UserManage",
         component: () => import("@/pages/user-manage/index.vue"),
         meta: {
@@ -42,15 +42,15 @@ export const dynamicRoutes: Array<AppRouteRecord> = [
         },
       },
       {
-        path: "/system/role",
+        path: "/system/role-manage",
         name: "RoleManage",
-        component: () => import("@/pages/role/index.vue"),
+        component: () => import("@/pages/role-manage/index.vue"),
         meta: {
           title: "角色管理",
         },
       },
       {
-        path: "/system/route",
+        path: "/system/route-manage",
         name: "RouteManage",
         component: () => import("@/pages/menu-manage/index.vue"),
         meta: {
@@ -65,18 +65,17 @@ export const dynamicRoutes: Array<AppRouteRecord> = [
     component: () => import("@/pages/temp-manage/index.vue"),
     meta: {
       title: "模板管理",
-      icon: "HomeFilled",
+      icon: "List",
     },
   },
-
   {
     path: "/use-temp",
     name: "UseTemp",
     component: () => import("@/pages/use-temp/index.vue"),
     meta: {
       title: "编辑模板",
-      icon: "HomeFilled",
       hidden: true,
+      keepAlive: true,
     },
   },
 ];
@@ -100,14 +99,14 @@ const routes: Array<RouteRecordRaw> = [
       title: "登录",
     },
   },
-  // {
-  //   path: "/:matchAll(.*)",
-  //   name: "NotFound",
-  //   component: () => import("@/pages/error/404.vue"),
-  //   meta: {
-  //     title: "页面不存在",
-  //   },
-  // },
+  {
+    path: "/404",
+    name: "NotFound",
+    component: () => import("@/pages/error/404.vue"),
+    meta: {
+      title: "页面不存在",
+    },
+  },
 ];
 
 const router = createRouter({
@@ -123,8 +122,7 @@ router.beforeEach(
   ) => {
     const token = Cookie.get("token");
     NProgress.start();
-
-    if (to.path === "/login") {
+    if (to.path === "/login" || to.path === "/404") {
       next();
     } else {
       if (!token) {
@@ -147,6 +145,7 @@ router.beforeEach(
   }
 );
 
+
 router.afterEach((to, from, fa) => {
   NProgress.done();
 
@@ -154,7 +153,9 @@ router.afterEach((to, from, fa) => {
     /**
      * 默认往里面加,有就不加了
      */
-    if (s.shortcutList.findIndex((item) => item.path === to.path) === -1) {
+    if (
+      s.shortcutList.findIndex((item) => item.fullPath === to.fullPath) === -1
+    ) {
       for (let i = 0; i < useUserStore().routes.length; i++) {
         const route = useUserStore().routes[i];
         if (route.name === to.name) {

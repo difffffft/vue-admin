@@ -47,7 +47,7 @@ watch(
       state.includeList.push(newVal.name);
     }
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 </script>
 

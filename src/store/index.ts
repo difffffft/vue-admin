@@ -118,6 +118,7 @@ export const useUserStore = defineStore("user", {
         const route = useUserStore().routes[i];
         router.removeRoute(route.name as RouteRecordName);
       }
+      router.removeRoute("NotFoundRedirect")
 
       //重新加载动态路由
       this.$reset();
@@ -156,6 +157,11 @@ export const useUserStore = defineStore("user", {
             }
           }
         }
+        r.addRoute({
+          path: "/:pathMatch(.*)",
+          name:"NotFoundRedirect",
+          redirect: "/404",
+        });
       } catch (error) {
         console.error(error);
       }
