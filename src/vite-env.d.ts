@@ -21,3 +21,12 @@ declare module "pubsub-js" {
     static unsubscribe: (eventName: string) => void;
   }
 }
+
+/**
+import { Plugin } from "vite";
+interface Options {
+    fileRegex?: RegExp;
+}
+declare const _default: (options?: Options) => Plugin;
+export { Options, _default as default };
+ */
