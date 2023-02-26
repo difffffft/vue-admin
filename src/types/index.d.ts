@@ -1,6 +1,7 @@
 declare type LoginFormType = {
   username: string;
   password: string;
+  code?: string;
 };
 
 declare interface AppRouteRecord {

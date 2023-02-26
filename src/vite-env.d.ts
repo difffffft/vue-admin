@@ -12,4 +12,12 @@ declare module "js-cookie";
 
 declare module "nprogress";
 
-declare module "pubsub-js";
+declare module "pubsub-js" {
+  interface callback {
+    (eventName: string, any: any);
+  }
+  export default class {
+    static subscribe: (eventName, callback) => void;
+    static unsubscribe: (eventName: string) => void;
+  }
+}

@@ -112,15 +112,11 @@ watch(
 watch(
   () => [...state.searchList],
   (newValue, oldValue) => {
-    if (newValue.length !== 0 && state.searchText !== "") {      
+    if (newValue.length !== 0 && state.searchText !== "") {
       dropdown.value.handleOpen();
     }
   }
 );
-
-// const handleSearchChange = () => {
-//   dropdown.value.handleOpen();
-// };
 </script>
 
 <style lang="scss" scoped>
