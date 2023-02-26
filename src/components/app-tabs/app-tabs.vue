@@ -4,10 +4,10 @@
       v-for="tag in mainStore.shortcutList"
       closable
       :key="tag.fullPath"
-      :type="mainStore.shortcutActive === tag.path ? '' : 'info'"
+      :type="mainStore.shortcutActiveFullpath === tag.fullPath ? '' : 'info'"
       size="large"
-      @click="handleTabClick(tag.path)"
-      @close="handleCLoseTabClick(tag.path)"
+      @click="handleTabClick(tag.fullPath)"
+      @close="handleCLoseTabClick(tag.fullPath)"
     >
       {{ tag.meta.title }}
     </el-tag>
@@ -22,8 +22,8 @@ const router = useRouter();
 const route = useRoute();
 const mainStore = useAppStore();
 
-const handleTabClick = (path: string) => {
-  route.path !== path && router.push({ path });
+const handleTabClick = (fullPath: string) => {
+  route.fullPath !== fullPath && router.push(fullPath);
 };
 
 const handleCLoseTabClick = (path: string) => {

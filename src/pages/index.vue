@@ -9,9 +9,9 @@
       </el-header>
       <app-tabs />
       <el-main>
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component, route }">
           <keep-alive :include="state.includeList">
-            <component :is="Component" />
+            <component :is="Component" :key="route.fullPath" />
           </keep-alive>
         </router-view>
       </el-main>
@@ -27,10 +27,10 @@ import AppTabs from "@/components/app-tabs/app-tabs.vue";
 import { useAppStore } from "@/store";
 import { reactive, watch } from "vue";
 import { useRoute } from "vue-router";
-const mainStore = useAppStore();
+const appStore = useAppStore();
 
 const handleShowAside = () => {
-  mainStore.$patch({ asideCollapse: !mainStore.asideCollapse });
+  appStore.$patch({ asideCollapse: !appStore.asideCollapse });
 };
 
 const state = reactive({

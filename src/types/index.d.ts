@@ -6,6 +6,7 @@ declare type LoginFormType = {
 declare interface AppRouteRecord {
   path: string;
   name: string;
+  fullPath?: string;
   component?: () => Promise<any>;
   meta?: {
     title: string;
@@ -20,4 +21,9 @@ declare interface AppResult {
   code: number;
   data: any;
   msg: string;
+}
+
+declare interface AppMenus {
+  menus: AppRouteRecord[];
+  flattenMenus: AppRouteRecord[];
 }

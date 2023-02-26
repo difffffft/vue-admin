@@ -90,13 +90,13 @@ const handleLogin = async () => {
       username: state.username,
       password: state.password,
     });
-    const { token } = res.data;
+    // const { token } = res.data;
     //持久化用户信息
-    Cookie.set("token", token);
+    Cookie.set("token", res.data);
     ElMessage.success("登录成功");
     state.router.push(callback);
   } catch (err: any) {
-    console.log(err);
+    console.error(err);
     ElMessage.error(err.message);
   } finally {
     state.loading = false;

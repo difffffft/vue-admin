@@ -11,6 +11,7 @@ export const superAdminRoutesData: AppResult = {
     "/system/route-manage",
     "/temp-manage",
     "/use-temp",
+
   ],
 };
 

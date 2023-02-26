@@ -13,34 +13,31 @@
             >{{ v.meta.title }}</el-breadcrumb-item
           >
         </el-breadcrumb> -->
-        <h4>{{ route.meta.title }}</h4>
+        <h4>{{ headerTitle }}</h4>
       </div>
     </div>
     <div class="app-header-r">
       <!-- 搜索 -->
       <div class="app-header-search">
         <el-dropdown
-          ref="dropdown1"
+          ref="dropdown"
           size="large"
           trigger="contextmenu"
           max-height="400"
         >
           <el-input
-            v-model="state.searchText"
+            v-model.trim="state.searchText"
             size="large"
             placeholder="请输入关键词"
             prefix-icon="Search"
-            @change="handleSearchChange"
           />
           <template #dropdown>
             <el-dropdown-menu class="search-dropdown-menu">
               <el-dropdown-item
                 class="search-dropdown-menu-item"
-                v-for="(v, k) in userStore.routes"
+                v-for="(v, k) in state.searchList"
               >
-                <router-link :to="v.path" tag="span">
-                  {{ v.meta?.title }}
-                </router-link>
+                {{ v.meta?.title }}
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -68,16 +65,28 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch, onUnmounted } from "vue";
 import { useUserStore } from "@/store";
 import { useRoute } from "vue-router";
+import PubSub from "pubsub-js";
 
-const dropdown1 = ref();
+const loadsh = require("lodash");
+
+PubSub.subscribe("setTitle", (eventName: string, title: string) => {
+  headerTitle.value = title;
+});
+onUnmounted(() => {
+  PubSub.unsubscribe("setTitle");
+});
+
+const headerTitle = ref("");
+const dropdown = ref();
 const route = useRoute();
 const userStore = useUserStore();
 const emit = defineEmits<{ (e: "click"): void }>();
 const state = reactive({
   searchText: "",
+  searchList: new Array<AppRouteRecord>(),
 });
 const handleOpen = () => {
   emit("click");
@@ -86,9 +95,32 @@ const handleLogout = () => {
   userStore.logout();
 };
 
-const handleSearchChange = () => {
-  dropdown1.value.handleOpen();
-};
+const handleSearch = loadsh.debounce((value: string) => {
+  state.searchList = [];
+  state.searchList = userStore.menus.flattenMenus.filter((item) => {
+    return item.meta && value != "" && item.meta?.title.indexOf(value) >= 0;
+  });
+}, 300);
+
+watch(
+  () => state.searchText,
+  (newValue, oldValue) => {
+    handleSearch(newValue);
+  }
+);
+
+watch(
+  () => [...state.searchList],
+  (newValue, oldValue) => {
+    if (newValue.length !== 0 && state.searchText !== "") {      
+      dropdown.value.handleOpen();
+    }
+  }
+);
+
+// const handleSearchChange = () => {
+//   dropdown.value.handleOpen();
+// };
 </script>
 
 <style lang="scss" scoped>

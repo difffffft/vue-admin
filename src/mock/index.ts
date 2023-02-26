@@ -4,18 +4,19 @@ import { superAdminData, defaultAdminData } from "@/mock/data/login";
 import { superAdminRoutesData, defaultAdminRoutesData } from "@/mock/data/routes";
 
 Mock.setup({ timeout: "300-1000" });
-Mock.mock("/dev-api/login", (data: any) => {
+Mock.mock("/dev/user/login", (data: any) => {
   let body: LoginFormType = JSON.parse(data.body);
   if (body.username === "admin") {
     return superAdminData;
   }
   return defaultAdminData;
 });
-Mock.mock("/dev-api/getRoutes", (data: any) => {
+Mock.mock("/dev/getRoutes", (data: any) => {
   if (Cookie.get("token") === "super_admin") {
     return superAdminRoutesData;
   }
   if (Cookie.get("token") === "default_admin") {
     return defaultAdminRoutesData;
   }
+  return defaultAdminRoutesData;
 });

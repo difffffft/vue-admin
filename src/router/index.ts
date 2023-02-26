@@ -57,6 +57,24 @@ export const dynamicRoutes: Array<AppRouteRecord> = [
           title: "菜单管理",
         },
       },
+
+      {
+        path: "/system/log-manage",
+        name: "LogManage",
+        children: [
+          {
+            path: "/system/log-manage/warn",
+            name: "LogWarnManage",
+            component: () => import("@/pages/log-warn-manage/index.vue"),
+            meta: {
+              title: "警告日志",
+            },
+          },
+        ],
+        meta: {
+          title: "日志管理",
+        },
+      },
     ],
   },
   {
@@ -145,29 +163,10 @@ router.beforeEach(
   }
 );
 
-
-router.afterEach((to, from, fa) => {
+router.afterEach((to, from, failure) => {
+  // document.title = to.meta.title as string;
+  useAppStore().addShortcut(to);
   NProgress.done();
-
-  useAppStore().$patch((s) => {
-    /**
-     * 默认往里面加,有就不加了
-     */
-    if (
-      s.shortcutList.findIndex((item) => item.fullPath === to.fullPath) === -1
-    ) {
-      for (let i = 0; i < useUserStore().routes.length; i++) {
-        const route = useUserStore().routes[i];
-        if (route.name === to.name) {
-          s.shortcutList.push(to);
-          break;
-        }
-      }
-    }
-    s.shortcutActive = to.path;
-  });
-
-  document.title = to.meta.title as string;
 });
 
 export default router;

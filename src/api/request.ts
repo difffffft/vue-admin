@@ -5,6 +5,7 @@ import axios, {
   AxiosResponse,
 } from "axios";
 import { ElMessage } from "element-plus";
+import Cookie from "js-cookie";
 
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -13,7 +14,7 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use(
   (config): any => {
-    config.headers.token = "token";
+    config.headers.token = Cookie.get("token");
     return config;
   },
   (error: AxiosError) => {
@@ -24,7 +25,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: any) => {
     if (response.code !== 200) {
-      Promise.reject(response.msg);
+      Promise.reject(response.message);
     }
     return response.data;
   },
