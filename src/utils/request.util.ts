@@ -1,11 +1,11 @@
 import axios, {
-  AxiosRequestConfig,
   AxiosError,
   AxiosInstance,
-  AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios";
 import { ElMessage } from "element-plus";
 import Cookie from "js-cookie";
+
 
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -13,25 +13,33 @@ const service: AxiosInstance = axios.create({
 });
 
 service.interceptors.request.use(
-  (config): any => {
-    config.headers.token = Cookie.get("token");
+  (config: InternalAxiosRequestConfig) => {
+    config.headers.set("token", Cookie.get("token"));
     return config;
   },
   (error: AxiosError) => {
-    Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 
 service.interceptors.response.use(
   (response: any) => {
-    if (response.code !== 200) {
-      Promise.reject(response.message);
+    if (!response.data) {
+      let message = "接口异常！";
+      ElMessage.error(message);
+      return Promise.reject({ message });
+    } else if (response.data.code !== 200) {
+      ElMessage.error(response.data.message);
+      return Promise.reject({ message: response.data.message });
     }
-    return response.data;
+    return Promise.resolve(response.data);
   },
   (error) => {
     if (error && error.response) {
       switch (error.response.status) {
+        case 302:
+          error.message = "重定向了!";
+          break;
         case 400:
           error.message = "错误请求";
           break;
@@ -74,12 +82,11 @@ service.interceptors.response.use(
     } else {
       // 超时处理
       if (JSON.stringify(error).includes("timeout")) {
-        console.error("服务器响应超时，请刷新当前页");
       }
       error.message = "连接服务器失败";
     }
     ElMessage.error(error.message);
-    return Promise.resolve(error.response);
+    return Promise.reject({ message: error.message });
   }
 );
 

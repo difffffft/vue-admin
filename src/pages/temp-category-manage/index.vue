@@ -1,14 +1,11 @@
 <template>
-  <div class="role-manage table-crud">
-    <!-- 筛选条件 -->
-    <!-- <div class="table-filter"></div> -->
-
+  <div class="temp-category-manage table-crud">
     <!-- 结果展示区域 -->
     <div class="table-result">
       <!-- 用户操作区域 -->
       <div class="table-options">
         <el-button type="primary" icon="Plus" @click="handleCreateClick"
-          >新增角色</el-button
+          >新增分类</el-button
         >
       </div>
 
@@ -19,13 +16,13 @@
         v-loading="state.loading"
       >
         <el-table-column prop="id" label="序号" />
-        <el-table-column prop="roleName" label="角色名称" />
+        <el-table-column prop="fileCategoryName" label="分类名称" />
         <el-table-column prop="insertTime" label="创建时间" />
         <el-table-column
           fixed="right"
           label="操作"
           class="table-item-options"
-          width="145px"
+          width="300px"
         >
           <template #default="scoped">
             <!-- <el-button type="success" icon="Search" circle /> -->
@@ -33,14 +30,12 @@
               type="primary"
               icon="Edit"
               circle
-              :disabled="scoped.row.id === '1'"
               @click="handleUpdateClick(scoped.$index)"
             />
             <el-button
               type="danger"
               icon="Delete"
               circle
-              :disabled="scoped.row.id === '1'"
               @click="handleDeleteClick(scoped.$index)"
             />
           </template>
@@ -68,21 +63,10 @@
     "
   >
     <el-form :model="InsertUpdateDialogData.formData">
-      <el-form-item label="角色名称" label-width="140px">
+      <el-form-item label="分类名称" label-width="140px">
         <el-input
-          v-model="InsertUpdateDialogData.formData.roleName"
+          v-model="InsertUpdateDialogData.formData.fileCategoryName"
           autocomplete="off"
-        />
-      </el-form-item>
-
-      <el-form-item label="菜单权限" label-width="140px">
-        <el-tree
-          ref="treeRef"
-          node-key="path"
-          :data="data"
-          show-checkbox
-          default-expanded-key
-          highlight-current
         />
       </el-form-item>
     </el-form>
@@ -107,39 +91,13 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive, nextTick } from "vue";
+import { ref, reactive } from "vue";
 import {
-  reqDeleteRole,
-  reqGetRoleAll,
-  reqInsertRole,
-  reqUpdateRole,
+  reqDeleteCategory,
+  reqGetCategoryAll,
+  reqInsertCategory,
+  reqUpdateCategory,
 } from "@/api";
-// import { dynamicRoutes } from "@/router";
-import lodash from "lodash";
-
-const treeRef = ref();
-
-const filterListFun = (list: any[]) => {
-  list = lodash.cloneDeep(list);
-  let filterList = <any[]>[];
-  const traverse = (list: any[], res: any[]) => {
-    list.forEach((item) => {
-      let children = <any[]>[];
-      if (item.children) {
-        traverse(item.children, children);
-      }
-      res.push({
-        label: item.meta.title,
-        path: item.path,
-        children,
-      });
-    });
-  };
-  traverse(list, filterList);
-  return filterList;
-};
-const data:any = [];
-// const data = filterListFun(dynamicRoutes);
 
 enum DIALOG_MODE {
   CREATE,
@@ -152,7 +110,7 @@ const pageSizeList = [5, 10, 20];
  */
 const state = reactive({
   // 查询的所有数据
-  tableData: <QueryRoleResultType[]>[],
+  tableData: <QueryCategoryResultType[]>[],
   // 当前页
   currentPage: 1,
   // 用户可以选择的每页数量
@@ -169,7 +127,12 @@ const state = reactive({
  * 筛选表单的数据
  */
 const filterFormData = reactive({
-  reset() {},
+  username: "",
+  nickname: "",
+  reset() {
+    filterFormData.username = "";
+    filterFormData.nickname = "";
+  },
 });
 
 /**
@@ -178,7 +141,7 @@ const filterFormData = reactive({
 const handleFilterQuery = async () => {
   state.loading = true;
   try {
-    const res = await reqGetRoleAll();
+    const res = await reqGetCategoryAll();
     state.tableData = res.data;
   } catch (error) {
   } finally {
@@ -198,16 +161,14 @@ const InsertUpdateDialogData = reactive({
   // 默认是新增模式
   mode: DIALOG_MODE.CREATE,
   // 弹窗里面的数据
-  formData: <InsertRoleFormType>{
+  formData: <UpdateCategoryFormType>{
     id: "",
-    roleName: "",
-    paths: <RouteTreeNode[]>[],
+    fileCategoryName: "",
   },
   //重置数据
   reset() {
     InsertUpdateDialogData.formData.id = "";
-    InsertUpdateDialogData.formData.roleName = "";
-    InsertUpdateDialogData.formData.paths = [];
+    InsertUpdateDialogData.formData.fileCategoryName = "";
   },
 });
 
@@ -215,50 +176,34 @@ const handleCreateClick = () => {
   InsertUpdateDialogData.mode = DIALOG_MODE.CREATE;
   InsertUpdateDialogData.reset();
   InsertUpdateDialogData.visible = true;
-
-  //显示
-  nextTick(() => {
-    treeRef.value?.setCheckedKeys(InsertUpdateDialogData.formData.paths, false);
-  });
 };
 
 const handleUpdateClick = (index: number) => {
   InsertUpdateDialogData.mode = DIALOG_MODE.UPDATE;
   InsertUpdateDialogData.reset();
-
   InsertUpdateDialogData.formData.id = state.tableData[index].id;
-  InsertUpdateDialogData.formData.roleName = state.tableData[index].roleName;
-
-  InsertUpdateDialogData.formData.paths = state.tableData[index].paths;
+  InsertUpdateDialogData.formData.fileCategoryName =
+    state.tableData[index].fileCategoryName;
 
   InsertUpdateDialogData.visible = true;
-
-  //显示
-  nextTick(() => {
-    treeRef.value?.setCheckedKeys(InsertUpdateDialogData.formData.paths, false);
-  });
 };
 const handleDialogOk = async () => {
   InsertUpdateDialogData.loading = true;
 
-  // console.log(InsertUpdateDialogData.formData);
-
   switch (InsertUpdateDialogData.mode) {
     case DIALOG_MODE.CREATE:
       try {
-        const res = await reqInsertRole({
-          roleName: InsertUpdateDialogData.formData.roleName,
-          paths: treeRef.value?.getCheckedKeys(false),
+        const res = await reqInsertCategory({
+          fileCategoryName: InsertUpdateDialogData.formData.fileCategoryName,
         });
         ElMessage.success("新增成功");
       } catch (error) {}
       break;
     case DIALOG_MODE.UPDATE:
       try {
-        const res = await reqUpdateRole({
+        const res = await reqUpdateCategory({
           id: InsertUpdateDialogData.formData.id,
-          roleName: InsertUpdateDialogData.formData.roleName,
-          paths: treeRef.value?.getCheckedKeys(false),
+          fileCategoryName: InsertUpdateDialogData.formData.fileCategoryName,
         });
         ElMessage.success("修改成功");
       } catch (error) {}
@@ -280,13 +225,12 @@ const handleDeleteClick = (index: number) => {
     type: "warning",
   }).then(async () => {
     try {
-      const res = await reqDeleteRole({
+      await reqDeleteCategory({
         id,
       });
       ElMessage.success("删除成功");
       handleFilterQuery();
     } catch (error) {
-      ElMessage.success("删除失败");
     }
   });
 };

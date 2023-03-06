@@ -6,8 +6,8 @@
     <el-container>
       <el-header>
         <app-header @click="handleShowAside"></app-header>
+          <app-tabs />
       </el-header>
-      <app-tabs />
       <el-main>
         <router-view v-slot="{ Component, route }">
           <keep-alive :include="state.includeList">
@@ -68,7 +68,12 @@ watch(
   border-right: none;
 }
 
+.el-header {
+  height: auto;
+}
+
 .el-main {
   background-color: #f2f2f2;
+  overflow-y: scroll;
 }
 </style>

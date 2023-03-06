@@ -8,9 +8,13 @@ import {
   RouteLocationNormalized,
 } from "vue-router";
 import Cookie from "js-cookie";
-import router, { dynamicRoutes } from "@/router";
+import router from "@/router";
 import PubSub from "pubsub-js";
-const loadsh = require("lodash");
+import NProgress from "nprogress";
+import lodash from "lodash";
+import { ElMessage } from "element-plus";
+import { getBooleanFromEnv } from "@/utils/env.util";
+
 
 export const useAppStore = defineStore("main", {
   state: () => {
@@ -64,7 +68,7 @@ export const useAppStore = defineStore("main", {
       this.shortcutActive = toRoute.path;
       this.shortcutActiveFullpath = toRoute.fullPath;
       //修改标题
-      PubSub.publish("setTitle", toRoute.meta.title);
+      toRoute.meta.title && PubSub.publish("setTitle", toRoute.meta.title);
     },
 
     /**
@@ -104,7 +108,6 @@ export const useUserStore = defineStore("user", {
     return {
       // 动态路由列表
       routes: new Array<AppRouteRecord>(),
-
       // 用户所拥有的按钮权限
       permissions: ["query", "edit"],
     };
@@ -119,24 +122,20 @@ export const useUserStore = defineStore("user", {
 
       // 判断某个path是不是菜单里面的,需要显示在侧边栏的
       const isMenu = (path: string): boolean => {
-        let flag = false;
         for (let j = 0; j < this.routes.length; j++) {
           const route = this.routes[j];
-          if (route.meta?.hidden) {
-            flag = false;
-            break;
-          }
-          if (route.path === path) {
-            flag = true;
-            break;
+          if (route.path === path && route.meta?.hidden !== true) {
+            return true;
           }
         }
-        return flag;
+        return false;
       };
 
       // 动态深度遍历函数
       const filterListFun = (list: AppRouteRecord[]) => {
+        list = lodash.cloneDeep(list);
         let filterList: AppRouteRecord[] = [];
+
         // 遍历函数
         const traverse = (list: AppRouteRecord[], res2: AppRouteRecord[]) => {
           list.forEach((item) => {
@@ -157,7 +156,9 @@ export const useUserStore = defineStore("user", {
         return filterList;
       };
 
-      res.menus = filterListFun(dynamicRoutes);
+      // res.menus = filterListFun(dynamicRoutes);
+      res.menus = [];
+
       return res;
     },
   },
@@ -188,33 +189,54 @@ export const useUserStore = defineStore("user", {
     /**
      * 动态获取路由
      */
-    async getRoutes(r: Router) {
+    async getRoutes(r: Router, to: RouteLocationNormalized) {
+      // const res = await reqGetRoutes();
+
+      return
+
       try {
         const res = await reqGetRoutes();
         const paths = res.data;
 
-        const traverse = (list: AppRouteRecord[]) => {
-          list.forEach((item) => {
-            for (let i = 0; i < paths.length; i++) {
-              let path = paths[i];
-              if (item.path === path) {
-                this.routes.push(item);
-                r.addRoute("Root", item as RouteRecordRaw);
-              }
+        const next = (
+          list: AppRouteRecord[],
+          path: string
+        ): AppRouteRecord | false => {
+          for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            if (item.path === path) {
+              return item;
             }
             if (item.children && item.children.length > 0) {
-              traverse(item.children);
+              let next_res = next(item.children, path);
+              if (next_res) {
+                return next_res;
+              }
             }
-          });
+          }
+          return false;
         };
-        traverse(dynamicRoutes);
+
+        for (let i = 0; i < paths.length; i++) {
+          let path = paths[i];
+          let item = next(dynamicRoutes, path);
+          if (item) {
+            this.routes.push(item);
+            r.addRoute("Root", item as RouteRecordRaw);
+          }
+        }
+
         r.addRoute({
           path: "/:pathMatch(.*)",
           name: "NotFoundRedirect",
           redirect: "/404",
         });
-      } catch (error) {
-        console.error(error);
+        r.push(to.fullPath);
+      } catch (error: any) {
+        console.log(error);
+        r.push({ path: "/login", query: { callback: to.fullPath } });
+      } finally {
+        NProgress.done();
       }
     },
   },

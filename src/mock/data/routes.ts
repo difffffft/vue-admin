@@ -3,15 +3,14 @@
  */
 export const superAdminRoutesData: AppResult = {
   code: 200,
-  msg: "一切OK",
+  message: "一切OK",
   data: [
     "/home",
     "/system/user-manage",
     "/system/role-manage",
-    "/system/route-manage",
-    "/temp-manage",
+    "/temp/list-manage",
+    "/temp/category-manage",
     "/use-temp",
-
   ],
 };
 
@@ -20,6 +19,43 @@ export const superAdminRoutesData: AppResult = {
  */
 export const defaultAdminRoutesData: AppResult = {
   code: 200,
-  msg: "一切OK",
-  data: ["/home", "/temp-manage", "/use-temp"],
+  message: "一切OK",
+  data: ["/home", "/temp/list-manage", "/temp/category-manage", "/use-temp"],
+};
+
+export const MockSuperAdminRoutes: AppResult = {
+  code: 200,
+  message: "一切OK",
+  data: [
+    {
+      name: "Home",
+      path: "/home",
+      component: "/home",
+      children: [],
+      meta: {
+        menuTitle: "首页",
+        menuIcon: "IconHome",
+        keepAlive: true,
+      },
+    },
+  ],
+};
+
+export const MockAdminRoutes: AppResult = {
+  code: 200,
+  message: "一切OK",
+  data: [
+    {
+      name: "Home",
+      path: "/home",
+      component: "/home",
+      children: [],
+      meta: {
+        menuTitle: "首页",
+        menuIcon: "IconHome",
+        menuHidden: true,
+        keepAlive: true,
+      },
+    },
+  ],
 };

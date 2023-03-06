@@ -69,8 +69,8 @@ import { ref, reactive, watch, onUnmounted } from "vue";
 import { useUserStore } from "@/store";
 import { useRoute } from "vue-router";
 import PubSub from "pubsub-js";
+import lodash from "lodash";
 
-const loadsh = require("lodash");
 
 PubSub.subscribe("setTitle", (eventName: string, title: string) => {
   headerTitle.value = title;
@@ -95,7 +95,7 @@ const handleLogout = () => {
   userStore.logout();
 };
 
-const handleSearch = loadsh.debounce((value: string) => {
+const handleSearch = lodash.debounce((value: string) => {
   state.searchList = [];
   state.searchList = userStore.menus.flattenMenus.filter((item) => {
     return item.meta && value != "" && item.meta?.title.indexOf(value) >= 0;
@@ -121,7 +121,7 @@ watch(
 
 <style lang="scss" scoped>
 .app-header {
-  height: 100%;
+  height: var(--el-header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -139,12 +139,12 @@ watch(
 }
 
 .app-header-search {
-  margin-right: 20px;
+  margin-right: 12px;
   height: 38px;
 }
 
 .app-header-breadcrumb {
-  margin-left: 20px;
+  padding: var(--el-header-padding);
   line-height: 1;
   max-width: 200px;
   h4 {

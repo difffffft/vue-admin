@@ -4,7 +4,6 @@
       <div class="settings">
         <i class="icon"></i>
         <h4>很抱歉！没有找到您要访问的页面！</h4>
-        <!-- <p><span id="num">5</span> 秒后将自动跳转到首页</p> -->
         <div>
           <RouterLink tag="a" to="/">返回首页</RouterLink>
           <a href="javascript:;" title="上一步" @click="handleLastCLick"
@@ -33,14 +32,10 @@ const handleLastCLick = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  // background-color: antiquewhite;
-  // margin: 230px auto;
 }
 
 .container {
   display: flex;
-  // background-color: #2cb7fd;
-  // background: url(@/assets/404-bg.png) no-repeat 560px top;
 }
 
 .bg {

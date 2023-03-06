@@ -7,10 +7,11 @@
 | pinia                   | ^2.0.32  | 全局状态管理  |
 | vue-router              | ^4.1.6   | 路由管理      |
 | vite                    | ^4.1.0   | 项目运行/构建 |
+| pnpm                    | ^7.27.1  | 项目包管理器  |
 | element-plus            | ^2.2.32  | 项目 UI 框架  |
 | @element-plus/icons-vue | ^2.0.10  | 基础图标      |
 | axios                   | ^1.3.4   | 网络请求      |
-| dart-sass               | ^1.25.0  | CSS 预处理    |
+| dart-sass               | ^1.25.0  | CSS预处理     |
 | pubsub-js               | ^1.9.4   | 发布订阅      |
 | js-cookie               | ^3.0.1   | 存储框架      |
 | lodash                  | ^4.17.21 | 工具库        |

@@ -4,28 +4,29 @@
     <div class="table-filter">
       <div class="table-filter-form">
         <el-form :inline="true" :model="filterFormData">
-          <el-form-item label="手机号">
-            <el-input
-              v-model="filterFormData.phoneNum"
-              clearable
-              placeholder="请输入手机号码"
-            />
-          </el-form-item>
-          <el-form-item label="昵称">
-            <el-input
-              v-model="filterFormData.nickname"
-              clearable
-              placeholder="请输入昵称"
-            />
+          <el-form-item label="模板分类">
+            <el-select
+              v-model="filterFormData.categoryId"
+              @change="handleSelectCategory"
+              placeholder="请选择模板分类"
+            >
+              <el-option
+                v-for="item in state.categoryList"
+                value-key="id"
+                :key="item.id"
+                :value="item.id"
+                :label="item.fileCategoryName"
+              />
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
-      <div class="table-filter-options">
+      <!-- <div class="table-filter-options">
         <el-button icon="Refresh" @click="filterFormData.reset">重置</el-button>
         <el-button type="primary" icon="Search" @click="handleFilterQuery"
           >查询</el-button
         >
-      </div>
+      </div> -->
     </div>
 
     <!-- 结果展示区域 -->
@@ -33,7 +34,7 @@
       <!-- 用户操作区域 -->
       <div class="table-options">
         <el-button type="primary" icon="Plus" @click="handleCreateClick"
-          >新增账号</el-button
+          >导入模板</el-button
         >
       </div>
 
@@ -44,29 +45,29 @@
         v-loading="state.loading"
       >
         <el-table-column prop="id" label="序号" />
-        <el-table-column prop="phoneNum" label="手机号" />
-        <el-table-column prop="nickname" label="昵称" />
-        <el-table-column prop="insertTime" label="创建时间" />
-        <el-table-column prop="roleList" label="角色">
-          <template #default="scoped">
-            <span>{{
-              scoped.row.roleList
-                .map((item: QueryRoleResultType) => item.roleName)
-                .join("/")
-            }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="comment" label="备注" />
+        <el-table-column prop="fileName" label="文件名称" />
+        <el-table-column prop="insertTime" label="上传时间" />
+        <el-table-column prop="operator" label="上传用户" />
         <el-table-column
           fixed="right"
           label="操作"
           class="table-item-options"
-          width="210px"
+          width="280px"
         >
           <template #default="scoped">
             <!-- <el-button type="success" icon="Search" circle /> -->
-            <el-button @click="handleUpdatePasswordClick(scoped.$index)"
-              >修改密码</el-button
+            <!-- <el-button
+              type="primary"
+              icon="Edit"
+              circle
+              @click="handleUpdateClick(scoped.$index)"
+            /> -->
+            <!-- <RouterLink to="/use-temp">使用</RouterLink> -->
+            <el-button @click="handleDownloadClick(scoped.$index)"
+              >下载</el-button
+            >
+            <el-button @click="handleUseTempClick(scoped.$index)" type="primary"
+              >使用模板</el-button
             >
             <el-button
               type="primary"
@@ -83,7 +84,6 @@
           </template>
         </el-table-column>
       </el-table>
-
       <div class="table-pagination-block">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
@@ -105,63 +105,43 @@
     "
   >
     <el-form :model="InsertUpdateDialogData.formData">
-      <el-form-item label="电话" label-width="140px">
+      <el-form-item label="文件名称" label-width="140px">
         <el-input
-          v-model="InsertUpdateDialogData.formData.phoneNum"
-          autocomplete="off"
-        />
-      </el-form-item>
-      <el-form-item
-        label="密码"
-        label-width="140px"
-        v-if="InsertUpdateDialogData.mode === DIALOG_MODE.CREATE"
-      >
-        <el-input
-          v-model="InsertUpdateDialogData.formData.password"
-          autocomplete="off"
-        />
-      </el-form-item>
-      <el-form-item label="昵称" label-width="140px">
-        <el-input
-          v-model="InsertUpdateDialogData.formData.nickname"
-          autocomplete="off"
-        />
-      </el-form-item>
-      <el-form-item label="备注" label-width="140px">
-        <el-input
-          v-model="InsertUpdateDialogData.formData.comment"
+          v-model="InsertUpdateDialogData.formData.fileName"
           autocomplete="off"
         />
       </el-form-item>
 
-      <el-form-item label="角色" label-width="140px">
+      <el-form-item label="分类" label-width="140px">
         <el-select
-          style="width: 100%"
-          v-model="InsertUpdateDialogData.formData.roleList"
-          multiple
-          filterable
-          allow-create
-          default-first-option
-          :reserve-keyword="false"
-          placeholder="请选择用户角色"
+          v-model="InsertUpdateDialogData.formData.fileCategoryId"
+          placeholder="请选择分类"
         >
           <el-option
-            v-for="item in state.roleList"
+            v-for="item in state.categoryList"
             value-key="id"
             :key="item.id"
             :value="item.id"
-            :label="item.roleName"
-            :disabled="item.id === '1'"
+            :label="item.fileCategoryName"
           />
         </el-select>
+      </el-form-item>
 
-        <!-- <el-select
-          v-model="InsertUpdateDialogData.formData.roles"
-          placeholder="请选择角色"
+      <el-form-item label="上传文件" label-width="140px">
+        <el-upload
+          ref="upload"
+          class="file-upload"
+          :headers="fileUploadHeader"
+          :action="fileUploadActionUrl"
+          :limit="1"
+          :auto-upload="true"
+          :on-exceed="handleExceed"
+          :on-success="handleFileUploadSuccess"
         >
-          <el-option label="超级管理员" value="0" />
-          <el-option label="管理员" value="1" />
-        </el-select> -->
+          <template #trigger>
+            <el-button type="primary">选择文件</el-button>
+          </template>
+        </el-upload>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -184,16 +164,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from "element-plus";
+import {
+  ElMessage,
+  ElMessageBox,
+  genFileId,
+  UploadInstance,
+  UploadProps,
+  UploadRawFile,
+} from "element-plus";
 import { ref, reactive } from "vue";
 import {
-  reqDeleteUser,
-  reqGetRoleAll,
-  reqGetUserList,
-  reqInsertUser,
-  reqUpdateUser,
-  reqUpdateUserPassword,
+  reqDeleteTemp,
+  reqGetCategoryAll,
+  reqGetTempList,
+  reqInsertTemp,
+  reqUpdateTemp,
 } from "@/api";
+import { useRouter } from "vue-router";
+import Cookie from "js-cookie";
+
+const router = useRouter();
 
 enum DIALOG_MODE {
   CREATE,
@@ -206,7 +196,7 @@ const pageSizeList = [5, 10, 20];
  */
 const state = reactive({
   // 查询的所有数据
-  tableData: <QueryUserFormType[]>[],
+  tableData: <QueryTempFormType[]>[],
   // 当前页
   currentPage: 1,
   // 用户可以选择的每页数量
@@ -218,18 +208,16 @@ const state = reactive({
   // 表格查询时的进度
   loading: false,
   //管理员可选择的角色列表
-  roleList: <QueryRoleResultType[]>[],
+  categoryList: <QueryCategoryResultType[]>[],
 });
 
 /**
  * 筛选表单的数据
  */
 const filterFormData = reactive({
-  phoneNum: "",
-  nickname: "",
+  categoryId: "",
   reset() {
-    filterFormData.phoneNum = "";
-    filterFormData.nickname = "";
+    filterFormData.categoryId = "";
   },
 });
 
@@ -239,11 +227,10 @@ const filterFormData = reactive({
 const handleFilterQuery = async () => {
   state.loading = true;
   try {
-    const res = await reqGetUserList({
+    const res = await reqGetTempList({
       currentPage: state.currentPage,
       pageSize: state.pageSize,
-      nickName: filterFormData.nickname,
-      phoneNum: filterFormData.phoneNum,
+      categoryId: filterFormData.categoryId,
     });
     state.tableData = res.data.records;
     state.total = res.data.total;
@@ -265,23 +252,19 @@ const InsertUpdateDialogData = reactive({
   // 默认是新增模式
   mode: DIALOG_MODE.CREATE,
   // 弹窗里面的数据
-  formData: <InsertUpdateUserFormType>{
+  formData: <InsertTempFormType>{
     id: "",
-    phoneNum: "",
-    nickname: "",
-    password: "",
-    //组件只能用string
-    roleList: <string[]>[],
-    comment: "",
+    fileName: "",
+    fileUrl: "",
+    fileCategoryId: "",
   },
   //重置数据
   reset() {
     InsertUpdateDialogData.formData.id = "";
-    InsertUpdateDialogData.formData.phoneNum = "";
-    InsertUpdateDialogData.formData.password = "";
-    InsertUpdateDialogData.formData.nickname = "";
-    InsertUpdateDialogData.formData.roleList = [];
-    InsertUpdateDialogData.formData.comment = "";
+    InsertUpdateDialogData.formData.fileName = "";
+    InsertUpdateDialogData.formData.fileUrl = "";
+    InsertUpdateDialogData.formData.fileCategoryId = "";
+    upload && upload.value && upload.value!.clearFiles();
   },
 });
 
@@ -294,46 +277,39 @@ const handleCreateClick = () => {
 const handleUpdateClick = (index: number) => {
   InsertUpdateDialogData.mode = DIALOG_MODE.UPDATE;
   InsertUpdateDialogData.reset();
+
   InsertUpdateDialogData.formData.id = state.tableData[index].id;
-  InsertUpdateDialogData.formData.phoneNum = state.tableData[index].phoneNum;
-  InsertUpdateDialogData.formData.nickname = state.tableData[index].nickname;
-  InsertUpdateDialogData.formData.comment = state.tableData[index].comment;
-  InsertUpdateDialogData.formData.roleList = state.tableData[
-    index
-  ].roleList.map((item) => String(item.id));
+  InsertUpdateDialogData.formData.fileName = state.tableData[index].fileName;
+  InsertUpdateDialogData.formData.fileUrl = state.tableData[index].fileUrl;
+  InsertUpdateDialogData.formData.fileCategoryId =
+    state.tableData[index].fileCategoryId;
+
   InsertUpdateDialogData.visible = true;
 };
 const handleDialogOk = async () => {
   InsertUpdateDialogData.loading = true;
-  let roleList = InsertUpdateDialogData.formData.roleList.map((id) => {
-    return {
-      id,
-    };
-  });
 
+  console.log(InsertUpdateDialogData.formData);
   switch (InsertUpdateDialogData.mode) {
     case DIALOG_MODE.CREATE:
       try {
-        await reqInsertUser({
-          phoneNum: InsertUpdateDialogData.formData.phoneNum,
-          password: InsertUpdateDialogData.formData.password,
-          nickname: InsertUpdateDialogData.formData.nickname,
-          comment: InsertUpdateDialogData.formData.comment,
-          roleList,
+        await reqInsertTemp({
+          fileName: InsertUpdateDialogData.formData.fileName,
+          fileUrl: InsertUpdateDialogData.formData.fileUrl,
+          fileCategoryId: InsertUpdateDialogData.formData.fileCategoryId,
         });
         ElMessage.success("新增成功");
       } catch (error) {}
       break;
     case DIALOG_MODE.UPDATE:
       try {
-        await reqUpdateUser({
-          id: InsertUpdateDialogData.formData.id as string,
-          phoneNum: InsertUpdateDialogData.formData.phoneNum,
-          nickname: InsertUpdateDialogData.formData.nickname,
-          comment: InsertUpdateDialogData.formData.comment,
-          roleList,
+        await reqUpdateTemp({
+          id: InsertUpdateDialogData.formData.id,
+          fileName: InsertUpdateDialogData.formData.fileName,
+          fileUrl: InsertUpdateDialogData.formData.fileUrl,
+          fileCategoryId: InsertUpdateDialogData.formData.fileCategoryId,
         });
-        ElMessage.success("修改成功");
+        ElMessage.success("新增成功");
       } catch (error) {}
       break;
     default:
@@ -345,33 +321,17 @@ const handleDialogOk = async () => {
   handleFilterQuery();
 };
 
-const handleUpdatePasswordClick = (index: number) => {
-  const { id } = state.tableData[index];
-  ElMessageBox.prompt("请输入新的密码", "修改密码", {
-    confirmButtonText: "修改",
-    cancelButtonText: "取消",
-    inputErrorMessage: "请输入新的密码",
-  }).then(async ({ value: password }) => {
-    try {
-      await reqUpdateUserPassword({
-        id,
-        password,
-      });
-      ElMessage.success("修改成功");
-    } catch (error) {}
-  });
-};
-
 const handleDeleteClick = (index: number) => {
-  const { id } = state.tableData[index];
+  const { id, fileUrl } = state.tableData[index];
   ElMessageBox.confirm("确认删除吗,删除后不可恢复?", "删除警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   }).then(async () => {
     try {
-      const res = await reqDeleteUser({
+      await reqDeleteTemp({
         id,
+        fileUrl,
       });
       ElMessage.success("删除成功");
       handleFilterQuery();
@@ -381,14 +341,51 @@ const handleDeleteClick = (index: number) => {
   });
 };
 
-const handleRolesQuery = async () => {
+const handleCategoryAllQuery = async () => {
   try {
-    const res = await reqGetRoleAll();
-    state.roleList = res.data;
+    const res = await reqGetCategoryAll();
+    state.categoryList = res.data;
+    if (state.categoryList.length <= 0) {
+      ElMessage.error("一个分类都没有");
+    } else {
+      filterFormData.categoryId = state.categoryList[0].id;
+      handleFilterQuery();
+    }
   } catch (error) {}
 };
-handleRolesQuery();
-handleFilterQuery();
+
+handleCategoryAllQuery();
+
+const handleDownloadClick = (i: number) => {
+  window.open(state.tableData[i].fileUrl);
+};
+const handleUseTempClick = (i: number) => {
+  router.push({ path: "/use-temp", query: { id: state.tableData[i].id } });
+};
+const handleSelectCategory = () => {
+  handleFilterQuery();
+};
+
+const upload = ref<UploadInstance>();
+const fileUploadActionUrl =
+  import.meta.env.VITE_APP_BASE_API + "/template/upload";
+const fileUploadHeader = {
+  token: Cookie.get("token"),
+};
+const handleExceed: UploadProps["onExceed"] = (files) => {
+  upload.value!.clearFiles();
+  const file = files[0] as UploadRawFile;
+  file.uid = genFileId();
+  upload.value!.handleStart(file);
+};
+
+const handleFileUploadSuccess = (res: any) => {
+  InsertUpdateDialogData.formData.fileUrl = res.data;
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.file-upload {
+  width: 100%;
+}
+</style>

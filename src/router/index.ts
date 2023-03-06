@@ -10,93 +10,83 @@ import RootView from "@/pages/index.vue";
 import Cookie from "js-cookie";
 import NProgress from "nprogress";
 import { useAppStore, useUserStore } from "@/store";
-const loadsh = require("lodash");
 
 /**
  * 动态路由，基于用户权限动态去加载
  */
-export const dynamicRoutes: Array<AppRouteRecord> = [
-  {
-    path: "/home",
-    name: "Home",
-    component: () => import("@/pages/home/index.vue"),
-    meta: {
-      title: "首页",
-      icon: "HomeFilled",
-    },
-  },
-  {
-    path: "/system",
-    name: "System",
-    meta: {
-      title: "系统管理",
-      icon: "Tools",
-    },
-    children: [
-      {
-        path: "/system/user-manage",
-        name: "UserManage",
-        component: () => import("@/pages/user-manage/index.vue"),
-        meta: {
-          title: "用户管理",
-        },
-      },
-      {
-        path: "/system/role-manage",
-        name: "RoleManage",
-        component: () => import("@/pages/role-manage/index.vue"),
-        meta: {
-          title: "角色管理",
-        },
-      },
-      {
-        path: "/system/route-manage",
-        name: "RouteManage",
-        component: () => import("@/pages/menu-manage/index.vue"),
-        meta: {
-          title: "菜单管理",
-        },
-      },
-
-      {
-        path: "/system/log-manage",
-        name: "LogManage",
-        children: [
-          {
-            path: "/system/log-manage/warn",
-            name: "LogWarnManage",
-            component: () => import("@/pages/log-warn-manage/index.vue"),
-            meta: {
-              title: "警告日志",
-            },
-          },
-        ],
-        meta: {
-          title: "日志管理",
-        },
-      },
-    ],
-  },
-  {
-    path: "/temp-manage",
-    name: "TempManage",
-    component: () => import("@/pages/temp-manage/index.vue"),
-    meta: {
-      title: "模板管理",
-      icon: "List",
-    },
-  },
-  {
-    path: "/use-temp",
-    name: "UseTemp",
-    component: () => import("@/pages/use-temp/index.vue"),
-    meta: {
-      title: "编辑模板",
-      hidden: true,
-      keepAlive: true,
-    },
-  },
-];
+// export const dynamicRoutes: Array<AppRouteRecord> = [
+//   {
+//     path: "/home",
+//     name: "Home",
+//     component: () => import("@/pages/home/index.vue"),
+//     meta: {
+//       title: "首页",
+//       icon: "IconHomeFill",
+//     },
+//   },
+//   {
+//     path: "/system",
+//     name: "System",
+//     meta: {
+//       title: "系统管理",
+//       icon: "Tools",
+//     },
+//     children: [
+//       {
+//         path: "/system/user-manage",
+//         name: "UserManage",
+//         component: () => import("@/pages/user-manage/index.vue"),
+//         meta: {
+//           title: "用户管理",
+//         },
+//       },
+//       {
+//         path: "/system/role-manage",
+//         name: "RoleManage",
+//         component: () => import("@/pages/role-manage/index.vue"),
+//         meta: {
+//           title: "角色管理",
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     path: "/temp",
+//     name: "Temp",
+//     meta: {
+//       title: "模板管理",
+//       icon: "List",
+//     },
+//     children: [
+//       {
+//         path: "/temp/list-manage",
+//         name: "TempListManage",
+//         component: () => import("@/pages/temp-list-manage/index.vue"),
+//         meta: {
+//           title: "模板列表",
+//         },
+//       },
+//       {
+//         path: "/temp/category-manage",
+//         name: "TempCategoryManage",
+//         component: () => import("@/pages/temp-category-manage/index.vue"),
+//         meta: {
+//           title: "模板分类",
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     path: "/use-temp",
+//     name: "UseTemp",
+//     component: () => import("@/pages/use-temp/index.vue"),
+//     meta: {
+//       title: "编辑模板",
+//       hidden: true,
+//       keepAlive: true,
+//     },
+//   },
+// ];
 
 /**
  * 静态路由，每个人都可以访问
@@ -142,21 +132,25 @@ router.beforeEach(
     NProgress.start();
     if (to.path === "/login" || to.path === "/404") {
       next();
+      NProgress.done();
     } else {
       if (!token) {
         next({ path: "/login", query: { callback: to.fullPath } });
+        NProgress.done();
       } else {
-        if (useUserStore().routes.length <= 0) {
+        const userStore = useUserStore();
+        if (userStore.routes.length <= 0) {
+          next();
           /**
            * 根据不同账号,动态注册不同的路由
            */
-          await useUserStore().getRoutes(router);
-          next({ ...to, replace: true });
+          await userStore.getRoutes(router, to);
         } else {
           /**
            * 直接访问
            */
           next();
+          NProgress.done();
         }
       }
     }
@@ -164,9 +158,7 @@ router.beforeEach(
 );
 
 router.afterEach((to, from, failure) => {
-  // document.title = to.meta.title as string;
   useAppStore().addShortcut(to);
-  NProgress.done();
 });
 
 export default router;

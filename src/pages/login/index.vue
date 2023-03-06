@@ -70,31 +70,43 @@ import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import { reqLogin } from "@/api";
+import bgImage from "@/assets/login_bg.png";
 
 const route = useRoute();
+const router = useRouter();
 const callback = (route.query.callback as string) || "/";
 const state = reactive({
-  username: "",
-  password: "",
+  username: localStorage.getItem("_login_username") || "",
+  password: localStorage.getItem("_login_password") || "",
   loading: false,
   loadingText: "登录",
-  bgImage: require("@/assets/login_bg.png"),
-  router: useRouter(),
+  bgImage,
 });
+
+const handleSavePassWord = (
+  _login_username: string,
+  _login_password: string
+) => {
+  localStorage.setItem("_login_username", _login_username);
+  localStorage.setItem("_login_password", _login_password);
+};
 
 const handleLogin = async () => {
   state.loading = true;
   state.loadingText = "登录中";
   try {
     let res: any = await reqLogin({
-      username: state.username,
+      phoneNum: state.username,
       password: state.password,
     });
+
     // const { token } = res.data;
-    //持久化用户信息
     Cookie.set("token", res.data);
+    handleSavePassWord(state.username, state.password);
+
     ElMessage.success("登录成功");
-    state.router.push(callback);
+
+    router.push(callback);
   } catch (err: any) {
     console.error(err);
     ElMessage.error(err.message);

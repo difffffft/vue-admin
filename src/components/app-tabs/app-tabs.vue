@@ -33,22 +33,20 @@ const handleCLoseTabClick = (path: string) => {
 
 <style lang="scss" scoped>
 .tabs-wrap {
-  padding: 12px;
   overflow-x: scroll;
   display: flex;
+  align-items: center;
   scrollbar-width: 0;
   border-bottom: solid 1px rgba($color: #000000, $alpha: 0.1);
+  height: calc(var(--el-header-height) - 4px);
 }
 
 .tabs-wrap::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
+  display: none;
 }
 
 .el-tag {
-  margin-left: 20px;
   cursor: pointer;
-}
-.el-tag:first-child {
-  margin-left: 10px;
+  margin-right: 12px;
 }
 </style>

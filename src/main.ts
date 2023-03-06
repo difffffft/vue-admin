@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { pinia } from "@/plugins/app-pinia";
+import { pinia } from "@/plugins/pinia.plugin";
 
 // 第三方组件库样式
 import "element-plus/dist/index.css";
@@ -7,15 +7,15 @@ import "nprogress/nprogress.css";
 
 // ElementPlus框架
 import ElementPlus from "element-plus";
-// ElementPlusIcon图标
-import ElementPlusIconPlugin from "@/plugins/element-plus-icon";
+// ElementPlusIcon和自定义的全局图标
+import AppIcon from "@/plugins/icon.plugin";
 // ElementPlus中文语言包
 import locale from "element-plus/lib/locale/lang/zh-cn";
 
 // MOCK数据
 import "@/mock";
 // 全局样式
-import "@/styles/index.css";
+import "@/styles/index.scss";
 
 import App from "./App.vue";
 import router from "@/router";
@@ -30,7 +30,7 @@ app.use(pinia);
 app.use(router);
 
 // ElementPlus的图标
-app.use(ElementPlusIconPlugin);
+app.use(AppIcon);
 
 // 使用ElementPlus
 app.use(ElementPlus, { locale: locale });
