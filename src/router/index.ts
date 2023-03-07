@@ -139,7 +139,7 @@ router.beforeEach(
         NProgress.done();
       } else {
         const userStore = useUserStore();
-        if (userStore.routes.length <= 0) {
+        if (userStore.routesFlag === false) {
           next();
           /**
            * 根据不同账号,动态注册不同的路由

@@ -6,10 +6,10 @@
       :key="tag.fullPath"
       :type="mainStore.shortcutActiveFullpath === tag.fullPath ? '' : 'info'"
       size="large"
-      @click="handleTabClick(tag.fullPath)"
-      @close="handleCLoseTabClick(tag.fullPath)"
+      @click="handleTabClick(tag.fullPath as string)"
+      @close="handleCLoseTabClick(tag.fullPath as string)"
     >
-      {{ tag.meta.title }}
+      {{ tag.meta.menuTitle }}
     </el-tag>
   </div>
 </template>

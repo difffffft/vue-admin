@@ -37,7 +37,7 @@
                 class="search-dropdown-menu-item"
                 v-for="(v, k) in state.searchList"
               >
-                {{ v.meta?.title }}
+                {{ v.meta?.menuTitle }}
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -96,10 +96,10 @@ const handleLogout = () => {
 };
 
 const handleSearch = lodash.debounce((value: string) => {
-  state.searchList = [];
-  state.searchList = userStore.menus.flattenMenus.filter((item) => {
-    return item.meta && value != "" && item.meta?.title.indexOf(value) >= 0;
-  });
+  // state.searchList = [];
+  // state.searchList = userStore.menus.flattenMenus.filter((item) => {
+  //   return item.meta && value != "" && item.meta?.title.indexOf(value) >= 0;
+  // });
 }, 300);
 
 watch(

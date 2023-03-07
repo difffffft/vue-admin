@@ -1,15 +1,11 @@
 import Mock from "mockjs";
 import Cookie from "js-cookie";
 import { superAdminData, defaultAdminData } from "@/mock/data/login";
-import {
-  superAdminRoutesData,
-  defaultAdminRoutesData,
-  MockSuperAdminRoutes,
-  MockAdminRoutes,
-} from "@/mock/data/routes";
+import { MockSuperAdminRoutes, MockAdminRoutes } from "@/mock/data/routes";
 import { roles, temps, tempCategoryList } from "@/mock/data/common";
 
 Mock.setup({ timeout: "300-1000" });
+
 Mock.mock("/dev/user/login", (data: any): AppResult => {
   let body: LoginFormType = JSON.parse(data.body);
   if (body.phoneNum === "admin") {
@@ -17,23 +13,14 @@ Mock.mock("/dev/user/login", (data: any): AppResult => {
   }
   return defaultAdminData;
 });
-Mock.mock("/dev/mock/getRouters", (data: any): AppResult => {
-  if (Cookie.get("token") === "super_admin") {
-    return MockSuperAdminRoutes;
-  }
-  return MockAdminRoutes;
-});
 
 Mock.mock(
   "/dev/permission/getAllPermissionListByToken",
   (data: any): AppResult => {
     if (Cookie.get("token") === "super_admin") {
-      return superAdminRoutesData;
+      return MockSuperAdminRoutes;
     }
-    if (Cookie.get("token") === "default_admin") {
-      return defaultAdminRoutesData;
-    }
-    return defaultAdminRoutesData;
+    return MockAdminRoutes;
   }
 );
 

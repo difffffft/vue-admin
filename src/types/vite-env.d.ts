@@ -40,17 +40,13 @@ interface AppRouteRecord {
   path: string;
   name: string;
   fullPath?: string;
-  component?: () => Promise<any>;
-  meta?: {
-    title: string;
-    keepAlive?: boolean;
-    icon?: string;
-    hidden?: boolean;
-  };
-  children?: AppRouteRecord[];
-}
+  component?: (() => Promise<any>) | null;
+  children: AppRouteRecord[];
+  meta: {
+    menuTitle: string;
+    menuHidden: boolean;
 
-interface AppMenus {
-  menus: AppRouteRecord[];
-  flattenMenus: AppRouteRecord[];
+    menuIcon?: string;
+    keepAlive?: boolean;
+  };
 }
