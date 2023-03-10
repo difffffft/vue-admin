@@ -2,7 +2,13 @@ import Mock from "mockjs";
 import Cookie from "js-cookie";
 import { superAdminData, defaultAdminData } from "@/mock/data/login";
 import { MockSuperAdminRoutes, MockAdminRoutes } from "@/mock/data/routes";
-import { roles, temps, tempCategoryList } from "@/mock/data/common";
+import {
+  roles,
+  temps,
+  tempCategoryList,
+  clauseTitleList,
+  clauseList,
+} from "@/mock/data/common";
 
 Mock.setup({ timeout: "300-1000" });
 
@@ -124,10 +130,125 @@ Mock.mock("/dev/temp/delete", (data: any): AppResult => {
 });
 
 // 查询所有模板分类
-Mock.mock("/dev/temp/category/all", (data: any): AppResult => {
+Mock.mock("/dev/category/getAllTemplateCategory", (data: any): AppResult => {
   return {
     code: 200,
     data: tempCategoryList,
+    message: "一切Ok",
+  };
+});
+
+// 获取所有标题
+Mock.mock("/dev/clause/getClauseCategoryList", (data: any): AppResult => {
+  return {
+    code: 200,
+    data: clauseTitleList,
+    message: "一切Ok",
+  };
+});
+
+// 根据条款分类ID，获取条款列表具体内容
+Mock.mock("/dev/clause/getClauseList", (data: any): AppResult => {
+  let body: any = JSON.parse(data.body);
+  const { clauseCategoryId } = body;
+  switch (clauseCategoryId) {
+    case "1":
+      return {
+        code: 200,
+        data: clauseList[0],
+        message: "一切Ok",
+      };
+    case "2":
+      return {
+        code: 200,
+        data: clauseList[1],
+        message: "一切Ok",
+      };
+    case "3":
+      return {
+        code: 200,
+        data: clauseList[2],
+        message: "一切Ok",
+      };
+  }
+
+  return {
+    code: 100,
+    data: [],
+    message: "无数据",
+  };
+});
+
+Mock.mock("/dev/clause/insertClause", (data: any): AppResult => {
+  let body: any = JSON.parse(data.body);
+  const { clauseCategoryId, content } = body;
+  switch (clauseCategoryId) {
+    case "1":
+      clauseList[0].push({
+        id: String(clauseList[0].length + 1),
+        content,
+      });
+      break;
+    case "2":
+      clauseList[1].push({
+        id: String(clauseList[1].length + 1),
+        content,
+      });
+      break;
+    case "3":
+      clauseList[2].push({
+        id: String(clauseList[2].length + 1),
+        content,
+      });
+      break;
+  }
+  return {
+    code: 200,
+    data: true,
+    message: "新增成功",
+  };
+});
+
+Mock.mock("/dev/clause/deleteClause", (data: any): AppResult => {
+  let body: DeleteCommonForm = JSON.parse(data.body);
+  let { id } = body;
+  let i1 = 0;
+  let i2 = 0;
+  for (let i = 0; i < clauseList.length; i++) {
+    let clauses = clauseList[i];
+    let index = clauses.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      i1 = i;
+      i2 = index;
+      clauseList[i1].splice(i2, 1);
+      break;
+    }
+  }
+  return {
+    code: 200,
+    data: true,
+    message: "一切Ok",
+  };
+});
+
+Mock.mock("/dev/clause/updateClause", (data: any): AppResult => {
+  let body: UpdateClauseForm = JSON.parse(data.body);
+  let { id, ccontent } = body;
+  let i1 = 0;
+  let i2 = 0;
+  for (let i = 0; i < clauseList.length; i++) {
+    let clauses = clauseList[i];
+    let index = clauses.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      i1 = i;
+      i2 = index;
+      clauseList[i1][i2].content = ccontent;
+      break;
+    }
+  }
+  return {
+    code: 200,
+    data: true,
     message: "一切Ok",
   };
 });

@@ -15,12 +15,12 @@ body,
 /* nprogress的默认样式修改 */
 
 #nprogress .bar {
-  background: var(-el-color-primary);
+  background: var(--el-color-primary);
 }
 
 #nprogress .spinner-icon {
-  border-top-color: var(-el-color-primary);
-  border-left-color: var(-el-color-primary);
+  border-top-color: var(--el-color-primary);
+  border-left-color: var(--el-color-primary);
 }
 
 /* 增删改查页面的table样式修改 */
@@ -56,10 +56,10 @@ body,
 .table-result {
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
   padding: 12px;
   flex: 1;
   background-color: #fff;
+  margin-top: 20px;
 }
 
 .el-table {
@@ -93,7 +93,25 @@ body,
   background-color: var(--el-menu-active-color);
 }
 
+.el-sub-menu .el-menu-item {
+  height: var(--el-menu-item-height);
+  line-height: var(--el-menu-item-height);
+}
+.el-menu-item-group__title {
+  padding: 0;
+}
+.el-sub-menu:hover {
+  background-color: var(--el-menu-hover-bg-color);
+}
+
 /* 自己的 */
 .w-240 {
   width: 220px;
+}
+
+.text-oneline {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

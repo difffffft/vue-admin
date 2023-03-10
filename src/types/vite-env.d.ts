@@ -48,5 +48,8 @@ interface AppRouteRecord {
 
     menuIcon?: string;
     keepAlive?: boolean;
+    weight?: number;
   };
 }
+
+

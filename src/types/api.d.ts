@@ -4,7 +4,7 @@ interface AppResult {
   message: string;
 }
 
-interface DeleteFormType {
+interface DeleteCommonForm {
   // 删除数据的记录的ID
   id: string;
 }
@@ -96,14 +96,13 @@ interface QueryRoleResultType {
   // 角色创建时间
   createTime: string;
   // 权限列表
-  paths: RouteTreeNode[];
+  permissionList: string[];
 }
 
 interface InsertRoleFormType {
   id?: string;
   roleName: string;
-  //角色可访问的路径
-  paths: RouteTreeNode[];
+  permissionList: string[];
 }
 
 // 模板分页查询条件
@@ -120,7 +119,7 @@ interface QueryTempFormType {
   fileUrl: string;
   fileCategoryId: string;
 }
-interface TempDeleteFormType extends DeleteFormType {
+interface TempDeleteCommonForm extends DeleteCommonForm {
   fileUrl: string;
 }
 
@@ -133,7 +132,7 @@ interface InsertTempFormType {
 }
 
 // 查询模板分类的结果
-interface QueryCategoryResultType {
+interface QueryTempCategoryResponse {
   id: string;
   fileCategoryName: string;
   insertTime: string;
@@ -145,4 +144,23 @@ interface InsertCategoryFormType {
 interface UpdateCategoryFormType {
   id: string;
   fileCategoryName: string;
+}
+
+interface QueryClauseCategoryListForm {
+  tempCategoryId: string;
+}
+
+// 条款管理
+interface QueryClauseListForm {
+  clauseCategoryId: string;
+  tempCategoryId: string;
+}
+interface InsertClauseForm {
+  clauseCategoryId: string;
+  tempCategoryId: string;
+  content: string;
+}
+interface UpdateClauseForm {
+  id: string;
+  ccontent: string;
 }

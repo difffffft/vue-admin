@@ -68,7 +68,8 @@ export const useAppStore = defineStore("main", {
       this.shortcutActive = toRoute.path;
       this.shortcutActiveFullpath = toRoute.fullPath;
       //修改标题
-      toRoute.meta.title && PubSub.publish("setTitle", toRoute.meta.menuTitle);
+      toRoute.meta.menuTitle &&
+        PubSub.publish("setTitle", toRoute.meta.menuTitle);
     },
 
     /**
@@ -113,6 +114,10 @@ export const useUserStore = defineStore("user", {
       routesList: <AppRouteRecord[]>[],
       // 扁平的Name列表
       routesNameList: <string[]>[],
+      // 扁平的搜索列表
+      routesSearchList: <{ sname: string; name: string; path: string }[]>[],
+      // 每个用户的home路径都不一样
+      routesHomePath: "",
     };
   },
   actions: {
@@ -144,22 +149,44 @@ export const useUserStore = defineStore("user", {
      * 动态获取路由
      */
     async getRoutes(r: Router, to: RouteLocationNormalized) {
+      let redirectFirstPath = "";
+      let redirectWeight = { weight: 10, path: "" };
+
       // 注册路由的方法
       let registerRoute = (item: AppRouteRecord) => {
         let route = lodash.cloneDeep(item);
         let { name } = route;
         route["component"] = null;
         if (routerMap.has(name)) {
+          if (!redirectFirstPath) {
+            redirectFirstPath = item.path;
+          }
+          if (
+            item.meta &&
+            item.meta.weight &&
+            item.meta.weight > redirectWeight.weight
+          ) {
+            redirectWeight.weight = item.meta.weight;
+            redirectWeight.path = item.path;
+          }
           route["component"] = routerMap.get(name);
           this.routesNameList.push(name);
           r.addRoute("Root", route as RouteRecordRaw);
         }
       };
+
       // 递归遍历
       let traverse = (list: AppRouteRecord[]) => {
         for (let i = 0; i < list.length; i++) {
           const item = list[i];
           registerRoute(item);
+          !item?.meta?.menuHidden &&
+            item.children.length === 0 &&
+            this.routesSearchList.push({
+              sname: item.meta.menuTitle + item.path,
+              name: item.meta.menuTitle,
+              path: item.path,
+            });
           if (item.children && item.children.length > 0) {
             traverse(item.children);
           }
@@ -184,14 +211,20 @@ export const useUserStore = defineStore("user", {
 
         // 4.修改状态
         this.routesFlag = true;
+        this.routesHomePath = redirectWeight.path
+          ? redirectWeight.path
+          : redirectFirstPath;
 
         // 5.跳转到指定的路由
-        r.push(to.fullPath);
+        // 6.如果路由是/，则默认从定向权重最高的或者第一个
+        if (to.path === "/") {
+          r.push(this.routesHomePath);
+        } else {
+          r.push(to.fullPath);
+        }
       } catch (error) {
         console.log(error);
-
         this.routesFlag = true;
-
         r.push({ path: "/login", query: { callback: to.fullPath } });
       } finally {
         NProgress.done();

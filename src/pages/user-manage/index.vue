@@ -183,7 +183,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="UserManage">
 import { ElMessage, ElMessageBox } from "element-plus";
 import { ref, reactive } from "vue";
 import {

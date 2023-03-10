@@ -12,7 +12,7 @@ export const reqGetUserList = (data: PageUserFilterFormType) =>
   http.post("/user/getAllUser", data);
 
 // 删除用户
-export const reqDeleteUser = (data: DeleteFormType) =>
+export const reqDeleteUser = (data: DeleteCommonForm) =>
   http.post("/user/deleteByUserId", data);
 
 // 新增用户
@@ -33,11 +33,13 @@ export const reqGetRoleAll = () => http.post("/role/getAllRole");
 export const reqInsertRole = (data: InsertRoleFormType) =>
   http.post("/role/insertRole", data);
 // 删除角色
-export const reqDeleteRole = (data: DeleteFormType) =>
+export const reqDeleteRole = (data: DeleteCommonForm) =>
   http.post("/role/deleteRole", data);
 // 修改角色
 export const reqUpdateRole = (data: InsertRoleFormType) =>
   http.post("/role/updateRole", data);
+// 获取权限树
+export const reqGetPermissionTree = ()=> http.post("/permission/getPermissionTree");
 
 // 根据分类ID，查询模板的具体信息
 export const getTempById = (params: UseTempFormType) =>
@@ -52,7 +54,7 @@ export const reqInsertTemp = (data: InsertTempFormType) =>
 export const reqUpdateTemp = (data: InsertTempFormType) =>
   http.put("/template/updateTemplateById", data);
 // 删除模板
-export const reqDeleteTemp = (params: TempDeleteFormType) =>
+export const reqDeleteTemp = (params: TempDeleteCommonForm) =>
   http.delete("/template/deleteTemplateById", { params });
 
 // 获取所有的模板分类
@@ -65,5 +67,5 @@ export const reqInsertCategory = (data: InsertCategoryFormType) =>
 export const reqUpdateCategory = (data: UpdateCategoryFormType) =>
   http.put("/category/updateTemplateCategoryById", data);
 // 删除模板分类
-export const reqDeleteCategory = (params: DeleteFormType) =>
+export const reqDeleteCategory = (params: DeleteCommonForm) =>
   http.delete("/category/deleteTemplateCateById", { params });

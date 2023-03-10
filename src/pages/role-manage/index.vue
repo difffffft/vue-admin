@@ -78,11 +78,12 @@
       <el-form-item label="菜单权限" label-width="140px">
         <el-tree
           ref="treeRef"
-          node-key="path"
-          :data="data"
+          node-key="id"
+          :data="state.permissionTree"
           show-checkbox
           default-expanded-key
           highlight-current
+          :props="defaultProps"
         />
       </el-form-item>
     </el-form>
@@ -105,7 +106,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="RoleManage">
 import { ElMessage, ElMessageBox } from "element-plus";
 import { ref, reactive, nextTick } from "vue";
 import {
@@ -113,33 +114,19 @@ import {
   reqGetRoleAll,
   reqInsertRole,
   reqUpdateRole,
+  reqGetPermissionTree,
 } from "@/api";
-// import { dynamicRoutes } from "@/router";
 import lodash from "lodash";
 
+const defaultProps = {
+  children: "children",
+  label: "title",
+};
 const treeRef = ref();
 
-const filterListFun = (list: any[]) => {
-  list = lodash.cloneDeep(list);
-  let filterList = <any[]>[];
-  const traverse = (list: any[], res: any[]) => {
-    list.forEach((item) => {
-      let children = <any[]>[];
-      if (item.children) {
-        traverse(item.children, children);
-      }
-      res.push({
-        label: item.meta.title,
-        path: item.path,
-        children,
-      });
-    });
-  };
-  traverse(list, filterList);
-  return filterList;
-};
-const data:any = [];
-// const data = filterListFun(dynamicRoutes);
+reqGetPermissionTree().then((res) => {
+  state.permissionTree = res.data;
+});
 
 enum DIALOG_MODE {
   CREATE,
@@ -163,6 +150,8 @@ const state = reactive({
   total: 300,
   // 表格查询时的进度
   loading: false,
+
+  permissionTree: [],
 });
 
 /**
@@ -201,13 +190,13 @@ const InsertUpdateDialogData = reactive({
   formData: <InsertRoleFormType>{
     id: "",
     roleName: "",
-    paths: <RouteTreeNode[]>[],
+    permissionList: [],
   },
   //重置数据
   reset() {
     InsertUpdateDialogData.formData.id = "";
     InsertUpdateDialogData.formData.roleName = "";
-    InsertUpdateDialogData.formData.paths = [];
+    InsertUpdateDialogData.formData.permissionList = [];
   },
 });
 
@@ -218,7 +207,10 @@ const handleCreateClick = () => {
 
   //显示
   nextTick(() => {
-    treeRef.value?.setCheckedKeys(InsertUpdateDialogData.formData.paths, false);
+    treeRef.value?.setCheckedKeys(
+      InsertUpdateDialogData.formData.permissionList,
+      false
+    );
   });
 };
 
@@ -228,40 +220,41 @@ const handleUpdateClick = (index: number) => {
 
   InsertUpdateDialogData.formData.id = state.tableData[index].id;
   InsertUpdateDialogData.formData.roleName = state.tableData[index].roleName;
-
-  InsertUpdateDialogData.formData.paths = state.tableData[index].paths;
+  InsertUpdateDialogData.formData.permissionList =
+    state.tableData[index].permissionList;
 
   InsertUpdateDialogData.visible = true;
 
   //显示
   nextTick(() => {
-    treeRef.value?.setCheckedKeys(InsertUpdateDialogData.formData.paths, false);
+    treeRef.value?.setCheckedKeys(
+      InsertUpdateDialogData.formData.permissionList,
+      false
+    );
   });
 };
 const handleDialogOk = async () => {
   InsertUpdateDialogData.loading = true;
 
   // console.log(InsertUpdateDialogData.formData);
+  console.log("数据",treeRef.value?.getCheckedKeys(false));
+  
 
   switch (InsertUpdateDialogData.mode) {
     case DIALOG_MODE.CREATE:
-      try {
-        const res = await reqInsertRole({
-          roleName: InsertUpdateDialogData.formData.roleName,
-          paths: treeRef.value?.getCheckedKeys(false),
-        });
-        ElMessage.success("新增成功");
-      } catch (error) {}
+      await reqInsertRole({
+        roleName: InsertUpdateDialogData.formData.roleName,
+        permissionList: treeRef.value?.getCheckedKeys(false),
+      });
+      ElMessage.success("新增成功");
       break;
     case DIALOG_MODE.UPDATE:
-      try {
-        const res = await reqUpdateRole({
-          id: InsertUpdateDialogData.formData.id,
-          roleName: InsertUpdateDialogData.formData.roleName,
-          paths: treeRef.value?.getCheckedKeys(false),
-        });
-        ElMessage.success("修改成功");
-      } catch (error) {}
+      await reqUpdateRole({
+        id: InsertUpdateDialogData.formData.id,
+        roleName: InsertUpdateDialogData.formData.roleName,
+        permissionList: treeRef.value?.getCheckedKeys(false),
+      });
+      ElMessage.success("修改成功");
       break;
     default:
       break;

@@ -77,18 +77,16 @@ const router = useRouter();
 const callback = (route.query.callback as string) || "/";
 const state = reactive({
   username: localStorage.getItem("_login_username") || "",
-  password: localStorage.getItem("_login_password") || "",
+  password: "",
   loading: false,
   loadingText: "登录",
   bgImage,
 });
 
 const handleSavePassWord = (
-  _login_username: string,
-  _login_password: string
+  _login_username: string
 ) => {
   localStorage.setItem("_login_username", _login_username);
-  localStorage.setItem("_login_password", _login_password);
 };
 
 const handleLogin = async () => {
@@ -102,7 +100,7 @@ const handleLogin = async () => {
 
     // const { token } = res.data;
     Cookie.set("token", res.data);
-    handleSavePassWord(state.username, state.password);
+    handleSavePassWord(state.username);
 
     ElMessage.success("登录成功");
 

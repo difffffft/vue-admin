@@ -163,7 +163,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="TempListManage">
 import {
   ElMessage,
   ElMessageBox,
@@ -208,7 +208,7 @@ const state = reactive({
   // 表格查询时的进度
   loading: false,
   //管理员可选择的角色列表
-  categoryList: <QueryCategoryResultType[]>[],
+  categoryList: <QueryTempCategoryResponse[]>[],
 });
 
 /**

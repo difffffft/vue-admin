@@ -126,6 +126,54 @@ export const MockSuperAdminRoutes: AppResult = {
       },
       children: [],
     },
+
+    {
+      path: "/clause",
+      name: "Clause",
+      meta: {
+        menuTitle: "条款管理",
+        menuIcon: "List",
+        menuHidden: false,
+        keepAlive: false,
+      },
+      children: [
+        {
+          path: "/clause/list-manage",
+          name: "ClauseListManage",
+          meta: {
+            menuTitle: "条款列表",
+            menuIcon: "List",
+            menuHidden: false,
+            keepAlive: false,
+          },
+          children: [],
+        },
+        {
+          path: "/clause/category-manage",
+          name: "ClauseCategoryManage",
+          meta: {
+            menuTitle: "条款分类",
+            menuIcon: "List",
+            menuHidden: false,
+            keepAlive: false,
+          },
+          children: [],
+        },
+
+      ],
+    },
+
+    {
+      path: "/make-file",
+      name: "MakeFile",
+      meta: {
+        menuTitle: "制作文件",
+        menuIcon: "List",
+        menuHidden: false,
+        keepAlive: false,
+      },
+      children: [],
+    },
   ],
 };
 
@@ -133,17 +181,6 @@ export const MockAdminRoutes: AppResult = {
   code: 200,
   message: "一切OK",
   data: [
-    {
-      path: "/home",
-      name: "Home",
-      meta: {
-        menuTitle: "首页",
-        menuIcon: "IconHomeFill",
-        menuHidden: false,
-        keepAlive: false,
-      },
-      children: [],
-    },
     {
       path: "/temp",
       name: "Temp",
@@ -173,6 +210,7 @@ export const MockAdminRoutes: AppResult = {
             menuIcon: "List",
             menuHidden: false,
             keepAlive: false,
+            weight: 11,
           },
           children: [],
         },
@@ -186,6 +224,42 @@ export const MockAdminRoutes: AppResult = {
         menuIcon: "List",
         menuHidden: true,
         keepAlive: true,
+      },
+      children: [],
+    },
+
+    {
+      path: "/clause-manage",
+      name: "ClauseManage",
+      meta: {
+        menuTitle: "条款管理",
+        menuIcon: "List",
+        menuHidden: false,
+        keepAlive: false,
+      },
+      children: [
+        {
+          path: "/clause-list-manage",
+          name: "ClauseListManage",
+          meta: {
+            menuTitle: "条款列表",
+            menuIcon: "List",
+            menuHidden: false,
+            keepAlive: false,
+          },
+          children: [],
+        },
+      ],
+    },
+
+    {
+      path: "/make-file",
+      name: "MakeFile",
+      meta: {
+        menuTitle: "制作文件",
+        menuIcon: "List",
+        menuHidden: false,
+        keepAlive: false,
       },
       children: [],
     },

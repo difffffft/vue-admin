@@ -6,7 +6,7 @@
     <el-container>
       <el-header>
         <app-header @click="handleShowAside"></app-header>
-          <app-tabs />
+        <app-tabs />
       </el-header>
       <el-main>
         <router-view v-slot="{ Component, route }">

@@ -15,7 +15,7 @@ import locale from "element-plus/lib/locale/lang/zh-cn";
 // MOCK数据
 import "@/mock";
 // 全局样式
-import "@/styles/index.scss";
+import "@/styles";
 
 import App from "./App.vue";
 import router from "@/router";
