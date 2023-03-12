@@ -2,9 +2,10 @@
   <el-menu
     :collapse="mainStore.asideCollapse"
     :default-active="mainStore.shortcutActive"
+    style="height:100%;"
     text-color="#EEE"
     active-text-color="#409eff"
-    background-color="#545c64"
+    background-color="#303030"
   >
     <app-logo></app-logo>
 

@@ -9,7 +9,7 @@
         <app-tabs />
       </el-header>
       <el-main>
-        <router-view v-slot="{ Component, route }">
+        <router-view v-slot="{ Component, route }" v-if="state.isRouteShow">
           <keep-alive :include="state.includeList">
             <component :is="Component" :key="route.fullPath" />
           </keep-alive>
@@ -25,17 +25,24 @@ import AppAside from "@/components/app-aside/app-aside.vue";
 import AppHeader from "@/components/app-header/app-header.vue";
 import AppTabs from "@/components/app-tabs/app-tabs.vue";
 import { useAppStore } from "@/store";
-import { reactive, watch } from "vue";
+import { nextTick, provide, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 const appStore = useAppStore();
 
 const handleShowAside = () => {
   appStore.$patch({ asideCollapse: !appStore.asideCollapse });
 };
-
 const state = reactive({
   includeList: new Array(),
+  isRouteShow: true,
 });
+const reload = () => {
+  state.isRouteShow = false;
+  nextTick(() => {
+    state.isRouteShow = true;
+  });
+};
+provide("reload", reload);
 const route = useRoute();
 watch(
   () => route,
@@ -57,9 +64,13 @@ watch(
 
   .el-aside {
     width: auto;
+    height: 100%;
 
     ul {
       height: 100%;
+      // .el-menu-item{
+      //   background-color: var(--el-menu-bg-color) !important;
+      // }
     }
   }
 }

@@ -11,4 +11,5 @@ routerMap.set("UseTemp", () => import("@/pages/use-temp/index.vue"));
 routerMap.set("ClauseListManage", () => import("@/pages/clause-list-manage/index.vue"));
 routerMap.set("ClauseCategoryManage", () => import("@/pages/clause-category-manage/index.vue"));
 routerMap.set("MakeFile", () => import("@/pages/make-file/index.vue"));
+routerMap.set("ClauseImport", () => import("@/pages/clause-import/index.vue"));
 export default routerMap;

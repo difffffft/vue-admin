@@ -9,59 +9,70 @@
       </div>
     </div>
     <div class="app-header-r">
-      <!-- 搜索 -->
-      <div class="app-header-search">
-        <el-input
-          v-model.trim="state.searchText"
+      <el-space :size="12">
+        <!-- 刷新 -->
+        <el-button
+          icon="Refresh"
           size="large"
-          placeholder="请输入关键词"
-          prefix-icon="Search"
-          @blur="handleSearchBlur"
-          @focus="handleSearchFocus"
+          circle
+          @click="handleReloadClick"
         />
-        <ul
-          class="app-search-result-panel"
-          v-if="state.searchPanelShow && state.searchList.length > 0"
-        >
-          <li
-            class="text-oneline"
-            v-for="v in state.searchList"
-            :key="v.path"
-            @click="handleGo(v.path)"
+        <!-- 公告/信息 -->
+        <el-button icon="Bell" size="large" circle />
+        <!-- 搜索 -->
+        <div class="app-header-search">
+          <el-input
+            v-model.trim="state.searchText"
+            size="large"
+            placeholder="请输入关键词"
+            prefix-icon="Search"
+            @blur="handleSearchBlur"
+            @focus="handleSearchFocus"
+          />
+          <ul
+            class="app-search-result-panel"
+            v-if="state.searchPanelShow && state.searchList.length > 0"
           >
-            {{ v.label }}
-          </li>
-        </ul>
-      </div>
-
-      <!-- 账号 -->
-      <el-dropdown>
-        <el-avatar
-          class="text-online"
-          shape="square"
-          :icon="'UserFilled'"
-          :size="38"
-          >{{ ""[0] }}</el-avatar
-        >
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="handleAccountSetting"
-              >账号设置</el-dropdown-item
+            <li
+              class="text-oneline"
+              v-for="v in state.searchList"
+              :key="v.path"
+              @click="handleGo(v.path)"
             >
-            <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+              {{ v.label }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- 账号 -->
+        <el-dropdown>
+          <el-avatar class="text-online" shape="square" :icon="'UserFilled'">{{
+            ""[0]
+          }}</el-avatar>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleAccountSetting"
+                >账号设置</el-dropdown-item
+              >
+              <el-dropdown-item @click="handleLogout"
+                >退出登录</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </el-space>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch, onUnmounted } from "vue";
+import { ref, reactive, watch, onUnmounted, inject } from "vue";
 import { useUserStore } from "@/store";
 import PubSub from "pubsub-js";
 import lodash from "lodash";
 import { useRouter } from "vue-router";
+
+const reload = inject("reload") as () => void;
 
 PubSub.subscribe("setTitle", (eventName: string, title: string) => {
   headerTitle.value = title;
@@ -81,6 +92,9 @@ const state = reactive({
 });
 const handleOpen = () => {
   emit("click");
+};
+const handleReloadClick = () => {
+  reload();
 };
 const handleGo = (path: string) => {
   state.searchPanelShow = false;
@@ -142,8 +156,7 @@ watch(
 }
 
 .app-header-search {
-  margin-right: 12px;
-  height: 38px;
+  // height: 38px;
   position: relative;
 }
 

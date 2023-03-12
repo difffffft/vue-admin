@@ -164,3 +164,22 @@ interface UpdateClauseForm {
   id: string;
   ccontent: string;
 }
+
+// 条款分类管理
+interface QueryClauseCategoryListForm {
+  tempCategoryId: string;
+}
+interface QueryClasuseCategoryResponse {
+  id: string;
+  title: string;
+  insertTime: string;
+}
+interface InsertClauseCategoryForm {
+  tempCategoryId: string;
+  title: string;
+  id?: string;
+}
+interface UpdateClauseCategoryForm {
+  id: string;
+  title: string;
+}

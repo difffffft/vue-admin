@@ -38,42 +38,6 @@ export const temps = [
   },
 ];
 
-export const tempCategoryList = [
-  {
-    id: "1",
-    fileCategoryName: "普通模板",
-    insertTime: "2023-03-01 12:14:27",
-    updateTime: "2023-03-01 12:14:27",
-  },
-  {
-    id: "2",
-    fileCategoryName: "简单模板",
-    insertTime: "2023-03-01 12:14:27",
-    updateTime: "2023-03-01 12:14:27",
-  },
-];
-
-export const clauseTitleList = [
-  {
-    id: "1",
-    title: "资质要求",
-    insertTime: "2023-03-01 12:14:27",
-    updateTime: "2023-03-01 12:14:27",
-  },
-  {
-    id: "2",
-    title: "信誉要求",
-    insertTime: "2023-03-01 12:14:27",
-    updateTime: "2023-03-01 12:14:27",
-  },
-  {
-    id: "3",
-    title: "业绩要求",
-    insertTime: "2023-03-01 12:14:27",
-    updateTime: "2023-03-01 12:14:27",
-  },
-];
-
 export const clauseList = [
   [
     {
@@ -125,4 +89,40 @@ export const clauseList = [
         "条款FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
     },
   ],
+];
+
+export const clauseTitleList = [
+  {
+    id: "1",
+    title: "资质要求",
+    insertTime: "2023-03-01 12:14:27",
+    updateTime: "2023-03-01 12:14:27",
+  },
+  {
+    id: "2",
+    title: "信誉要求",
+    insertTime: "2023-03-01 12:14:27",
+    updateTime: "2023-03-01 12:14:27",
+  },
+  {
+    id: "3",
+    title: "业绩要求",
+    insertTime: "2023-03-01 12:14:27",
+    updateTime: "2023-03-01 12:14:27",
+  },
+];
+
+export const tempCategoryList = [
+  {
+    id: "1",
+    fileCategoryName: "普通模板",
+    insertTime: "2023-03-01 12:14:27",
+    updateTime: "2023-03-01 12:14:27",
+  },
+  {
+    id: "2",
+    fileCategoryName: "简单模板",
+    insertTime: "2023-03-01 12:14:27",
+    updateTime: "2023-03-01 12:14:27",
+  },
 ];

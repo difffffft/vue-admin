@@ -252,3 +252,47 @@ Mock.mock("/dev/clause/updateClause", (data: any): AppResult => {
     message: "一切Ok",
   };
 });
+
+Mock.mock("/dev/clause/updateClauseCategory", (data: any): AppResult => {
+  let body: UpdateClauseCategoryForm = JSON.parse(data.body);
+  let { id, title } = body;
+  let index = clauseTitleList.findIndex((item) => item.id === id);
+  if (index !== -1) {
+    clauseTitleList[index].title = title;
+  }
+  return {
+    code: 200,
+    data: true,
+    message: "一切Ok",
+  };
+});
+
+Mock.mock("/dev/clause/insertClauseCategory", (data: any): AppResult => {
+  let body: InsertClauseCategoryForm = JSON.parse(data.body);
+  let { title, tempCategoryId } = body;
+  clauseTitleList.push({
+    id: String(clauseTitleList.length + 2),
+    title,
+    insertTime: "2023-03-01 12:14:27",
+    updateTime: "2023-03-01 12:14:27",
+  });
+  return {
+    code: 200,
+    data: true,
+    message: "一切Ok",
+  };
+});
+
+Mock.mock("/dev/clause/deleteClauseCategory", (data: any): AppResult => {
+  let body: DeleteCommonForm = JSON.parse(data.body);
+  let { id } = body;
+  let index = clauseTitleList.findIndex((item) => item.id === id);
+  if (index !== -1) {
+    clauseTitleList.splice(index, 1);
+  }
+  return {
+    code: 200,
+    data: true,
+    message: "一切Ok",
+  };
+});

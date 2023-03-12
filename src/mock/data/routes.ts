@@ -159,10 +159,19 @@ export const MockSuperAdminRoutes: AppResult = {
           },
           children: [],
         },
-
+        {
+          path: "/clause/import",
+          name: "ClauseImport",
+          meta: {
+            menuTitle: "条款导入",
+            menuIcon: "Upload",
+            menuHidden: false,
+            keepAlive: false,
+          },
+          children: [],
+        },
       ],
     },
-
     {
       path: "/make-file",
       name: "MakeFile",

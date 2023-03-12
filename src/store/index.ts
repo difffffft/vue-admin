@@ -67,6 +67,9 @@ export const useAppStore = defineStore("main", {
       }
       this.shortcutActive = toRoute.path;
       this.shortcutActiveFullpath = toRoute.fullPath;
+
+      console.log(toRoute);
+      
       //修改标题
       toRoute.meta.menuTitle &&
         PubSub.publish("setTitle", toRoute.meta.menuTitle);

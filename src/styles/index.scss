@@ -100,8 +100,12 @@ body,
 .el-menu-item-group__title {
   padding: 0;
 }
-.el-sub-menu:hover {
+.el-menu-item {
+  background-color: var(--el-menu-bg-color);
+}
+.el-menu-item:hover {
   background-color: var(--el-menu-hover-bg-color);
+  color: var(--el-menu-active-color);
 }
 
 /* 自己的 */
