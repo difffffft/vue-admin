@@ -2,17 +2,17 @@ export const MockSuperAdminRoutes: AppResult = {
   code: 200,
   message: "一切OK",
   data: [
-    {
-      path: "/home",
-      name: "Home",
-      meta: {
-        menuTitle: "首页",
-        menuIcon: "IconHomeFill",
-        menuHidden: false,
-        keepAlive: false,
-      },
-      children: [],
-    },
+    // {
+    //   path: "/home",
+    //   name: "Home",
+    //   meta: {
+    //     menuTitle: "首页",
+    //     menuIcon: "IconHomeFill",
+    //     menuHidden: false,
+    //     keepAlive: false,
+    //   },
+    //   children: [],
+    // },
     {
       path: "/system",
       name: "System",
@@ -45,40 +45,6 @@ export const MockSuperAdminRoutes: AppResult = {
           },
           children: [],
         },
-        {
-          path: "/system/log-manage",
-          name: "LogManage",
-          meta: {
-            menuTitle: "日志管理",
-            menuIcon: "Tools",
-            menuHidden: false,
-            keepAlive: false,
-          },
-          children: [
-            {
-              path: "/system/log-manage/caozuo",
-              name: "LogCaozuoManage",
-              meta: {
-                menuTitle: "操作日志",
-                menuIcon: "Tools",
-                menuHidden: false,
-                keepAlive: false,
-              },
-              children: [],
-            },
-            {
-              path: "/system/log-manage/login",
-              name: "LogLoginManage",
-              meta: {
-                menuTitle: "登录日志",
-                menuIcon: "Tools",
-                menuHidden: false,
-                keepAlive: false,
-              },
-              children: [],
-            },
-          ],
-        },
       ],
     },
     {
@@ -92,10 +58,10 @@ export const MockSuperAdminRoutes: AppResult = {
       },
       children: [
         {
-          path: "/temp/list-manage",
-          name: "TempListManage",
+          path: "/temp/category-manage",
+          name: "TempCategoryManage",
           meta: {
-            menuTitle: "模板列表",
+            menuTitle: "模板分类",
             menuIcon: "List",
             menuHidden: false,
             keepAlive: false,
@@ -103,10 +69,10 @@ export const MockSuperAdminRoutes: AppResult = {
           children: [],
         },
         {
-          path: "/temp/category-manage",
-          name: "TempCategoryManage",
+          path: "/temp/list-manage",
+          name: "TempListManage",
           meta: {
-            menuTitle: "模板分类",
+            menuTitle: "模板列表",
             menuIcon: "List",
             menuHidden: false,
             keepAlive: false,
@@ -138,10 +104,10 @@ export const MockSuperAdminRoutes: AppResult = {
       },
       children: [
         {
-          path: "/clause/list-manage",
-          name: "ClauseListManage",
+          path: "/clause/category-manage",
+          name: "ClauseCategoryManage",
           meta: {
-            menuTitle: "条款列表",
+            menuTitle: "条款分类",
             menuIcon: "List",
             menuHidden: false,
             keepAlive: false,
@@ -149,10 +115,10 @@ export const MockSuperAdminRoutes: AppResult = {
           children: [],
         },
         {
-          path: "/clause/category-manage",
-          name: "ClauseCategoryManage",
+          path: "/clause/list-manage",
+          name: "ClauseListManage",
           meta: {
-            menuTitle: "条款分类",
+            menuTitle: "条款列表",
             menuIcon: "List",
             menuHidden: false,
             keepAlive: false,
@@ -179,7 +145,7 @@ export const MockSuperAdminRoutes: AppResult = {
         menuTitle: "制作文件",
         menuIcon: "List",
         menuHidden: false,
-        keepAlive: false,
+        keepAlive: true,
       },
       children: [],
     },

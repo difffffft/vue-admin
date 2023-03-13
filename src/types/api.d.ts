@@ -15,6 +15,7 @@ interface QueryByIdType {
 }
 
 interface UseTempFormType {
+  flag?: string;
   templateId: string;
 }
 
@@ -155,6 +156,9 @@ interface QueryClauseListForm {
   clauseCategoryId: string;
   tempCategoryId: string;
 }
+interface QueryClauseListByTempCategoryIdForm {
+  tempCategoryId: string;
+}
 interface InsertClauseForm {
   clauseCategoryId: string;
   tempCategoryId: string;
@@ -182,4 +186,10 @@ interface InsertClauseCategoryForm {
 interface UpdateClauseCategoryForm {
   id: string;
   title: string;
+}
+
+//制作文件
+interface MakeFileForm {
+  templateId: string;
+  clauseIdList: string[];
 }

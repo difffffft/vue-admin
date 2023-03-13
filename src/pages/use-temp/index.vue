@@ -13,7 +13,8 @@ import { ref, reactive } from "vue";
 import { getTempById } from "@/api";
 
 const route = useRoute();
-const { id } = route.query;
+let { id, readonly } = route.query;
+
 const title = route.meta.title;
 onActivated(() => {
   PubSub.publish("setTitle", title + "-" + id);
@@ -32,8 +33,11 @@ onMounted(async () => {
     state.loading = true;
     const res = await getTempById({
       templateId: route.query.id as string,
+      flag: readonly as string,
     });
     const { key, fileUrl, fileName, fileType, userId } = res.data;
+    console.log("fileUrl",fileUrl);
+    
     //没问题就初始化编辑器
     const editorConfig = {
       width: "100%",
@@ -52,90 +56,9 @@ onMounted(async () => {
       user: {
         id: userId,
       },
-      events: {
-      
-
-        onRequestSaveAs(data: { title: string; url: string }) {
-          console.log("另存为", data.url);
-        },
-
-        onDownloadAs(data: any) {
-          console.log("下载为", data);
-        },
-
-        onRequestHistory() {
-          // state.editor.refreshHistory({
-          //   currentVersion: 2,
-          //   history: [
-          //     {
-          //       changes: "changes",
-          //       created: "2010-07-06 10:13 AM",
-          //       key: "af86C7e71Ca8",
-          //       serverVersion: "serverVersion",
-          //       user: {
-          //         id: "F89d8069ba2b",
-          //         name: "Kate Cage",
-          //       },
-          //       version: 1,
-          //     },
-          //     {
-          //       changes: "changes",
-          //       created: "2010-07-07 3:46 PM",
-          //       key: "Khirz6zTPdfd7",
-          //       user: {
-          //         id: "78e1e841",
-          //         name: "John Smith",
-          //       },
-          //       version: 2,
-          //     },
-          //   ],
-          // });
-        },
-
-        /**
-         * 声明此方法显示历史版本按钮
-         */
-        onRequestHistoryData(event: any) {
-          // let version = event.data;
-          // state.editor.setHistoryData({
-          //   changesUrl: "https://example.com/url-to-changes.zip",
-          //   fileType: "docx",
-          //   key: "Khirz6zTPdfd7",
-          //   previous: {
-          //     fileType: "docx",
-          //     key: "af86C7e71Ca8",
-          //     url: "https://example.com/url-to-the-previous-version-of-the-document.docx",
-          //   },
-          //   url: "https://example.com/url-to-example-document.docx",
-          //   version: version,
-          // });
-        },
-        // onAppReady: this.onAppReady,
-        //                 onDocumentStateChange: this.events_onDocumentStateChange,
-        //                 onMetaChange: this.events_onMetaChange,
-        //                 onDocumentReady: this.events_onDocumentReady,
-        //                 onInfo: this.events_onInfo,
-        //                 onWarning: this.events_onWarning,
-        //                 onError: this.events_onError,
-        //                 onRequestSharingSettings: this.events_onRequestSharingSettings,
-        //                 onRequestRename: this.events_onRequestRename,
-
-        //                 onMakeActionLink: this.events_onMakeActionLink,
-        //                 onRequestInsertImage: this.events_onRequestInsertImage,
-        //                 onRequestSaveAs: this.events_onRequestSaveAs,
-
-        //                 onRequestMailMergeRecipients: this.events_onRequestMailMergeRecipients,
-        //                 onRequestCompareFile: this.events_onRequestCompareFile,
-        //                 onRequestEditRights: this.events_onRequestEditRights,
-        //                 onRequestHistory: this.events_onRequestHistory,
-        //                 onRequestHistoryClose: this.events_onRequestHistoryClose,
-        //                 onRequestHistoryData: this.events_onRequestHistoryData,
-        //                 onRequestRestore: this.events_onRequestRestore
-      },
+      permissions: {},
     };
     state.editor = new window.DocsAPI.DocEditor("onlyoffice", editorConfig);
-
-    console.log(state.editor);
   } catch (error) {
   } finally {
     state.loading = false;

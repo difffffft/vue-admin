@@ -1,7 +1,7 @@
 <template>
     <div class="app-logo" @click="handleGoHome" :class="mainStore.asideCollapse ? 'app-collapse-logo' : ''">
         <img src="@/assets/logo.png">
-        <h1>通用后台管理</h1>
+        <h1>招标文件制作</h1>
     </div>
 </template>
 

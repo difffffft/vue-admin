@@ -179,6 +179,8 @@ watch(
   top: 120%;
   right: 0;
   width: 100%;
+  max-height:300px;
+  overflow-y: scroll;
   padding: 12px;
   background-color: #fff;
   background-color: var(--el-input-bg-color, var(--el-fill-color-blank));

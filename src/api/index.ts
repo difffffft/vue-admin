@@ -23,9 +23,9 @@ export const reqInsertUser = (data: InsertUserFormType) =>
 export const reqUpdateUser = (data: UpdateUserFormType) =>
   http.post("/user/updateUser", data);
 
-  // 修改用户
+// 修改用户
 export const reqUpdateUserPassword = (data: UpdateUserPasswordFormType) =>
-http.post("/user/updatePasswordById", data);
+  http.post("/user/updatePasswordById", data);
 
 // 查询除超级管理员外的所有角色
 export const reqGetRoleAll = () => http.post("/role/getAllRole");
@@ -39,7 +39,8 @@ export const reqDeleteRole = (data: DeleteCommonForm) =>
 export const reqUpdateRole = (data: InsertRoleFormType) =>
   http.post("/role/updateRole", data);
 // 获取权限树
-export const reqGetPermissionTree = ()=> http.post("/permission/getPermissionTree");
+export const reqGetPermissionTree = () =>
+  http.post("/permission/getPermissionTree");
 
 // 根据分类ID，查询模板的具体信息
 export const getTempById = (params: UseTempFormType) =>
@@ -69,3 +70,5 @@ export const reqUpdateCategory = (data: UpdateCategoryFormType) =>
 // 删除模板分类
 export const reqDeleteCategory = (params: DeleteCommonForm) =>
   http.delete("/category/deleteTemplateCateById", { params });
+
+export const reqMakeFile = (data: MakeFileForm) => http.post("/makeFile", data);

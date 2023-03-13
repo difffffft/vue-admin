@@ -288,8 +288,6 @@ const handleUpdateClick = (index: number) => {
 };
 const handleDialogOk = async () => {
   InsertUpdateDialogData.loading = true;
-
-  console.log(InsertUpdateDialogData.formData);
   switch (InsertUpdateDialogData.mode) {
     case DIALOG_MODE.CREATE:
       try {

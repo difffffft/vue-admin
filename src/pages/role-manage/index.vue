@@ -235,11 +235,6 @@ const handleUpdateClick = (index: number) => {
 };
 const handleDialogOk = async () => {
   InsertUpdateDialogData.loading = true;
-
-  // console.log(InsertUpdateDialogData.formData);
-  console.log("数据",treeRef.value?.getCheckedKeys(false));
-  
-
   switch (InsertUpdateDialogData.mode) {
     case DIALOG_MODE.CREATE:
       await reqInsertRole({

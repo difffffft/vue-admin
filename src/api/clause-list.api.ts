@@ -4,6 +4,10 @@ import http from "@/utils/request.util";
 export const reqGetClauseList = (data: QueryClauseListForm) =>
   http.post("/clause/getClauseList", data);
 
+//根据模板ID获取所有数据
+export const reqGetClauseListByTempCategoryId = (data: QueryClauseListByTempCategoryIdForm) =>
+  http.post("/clause/getAllClauseListByTempCategoryId", data);
+
 // 新增条款
 export const reqInsertClause = (data: InsertClauseForm) =>
   http.post("/clause/insertClause", data);
@@ -15,3 +19,5 @@ export const reqUpdateClause = (data: UpdateClauseForm) =>
 // 删除条款
 export const reqDeleteClause = (data: DeleteCommonForm) =>
   http.post("/clause/deleteClause", data);
+
+  
